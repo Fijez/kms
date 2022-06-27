@@ -24,6 +24,11 @@ ext {
 }
 
 dependencies {
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.1'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+    compileOnly 'javax.servlet:jstl'
+    compileOnly 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -32,18 +37,20 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.liquibase:liquibase-core'
-    implementation 'org.springframework.session:spring-session-core'
+//    implementation 'org.springframework.session:spring-session-core'
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    implementation 'javax.servlet.jsp.jstl:jstl:1.2'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
     compileOnly 'org.projectlombok:lombok'
-    compileOnly 'org.mapstruct:mapstruct:1.4.2.Final'
     implementation 'javax.servlet:jstl'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.springframework.security:spring-security-taglibs'
+    implementation 'org.springframework.security:spring-security-taglibs'
 }
 
 tasks.named('test') {
