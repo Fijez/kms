@@ -1,0 +1,448 @@
+databaseChangeLog:
+- changeSet:
+    id: 1656269436311-1
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: namespace_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: title
+            type: VARCHAR(255)
+        - column:
+            name: creator_id
+            type: BIGINT
+        tableName: namespace
+- changeSet:
+    id: 1656269436311-2
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: project_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: title
+            type: VARCHAR(255)
+        tableName: project
+- changeSet:
+    id: 1656269436311-3
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: users_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(20)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: role
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1656269436311-4
+    author: 1 (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: title
+        constraintName: uke4lqlggh0mpqlpsgfy10d5p29
+        tableName: namespace
+- changeSet:
+    id: 1656269436311-5
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: article_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: author
+            type: VARCHAR(255)
+        - column:
+            name: content
+            type: OID
+        - column:
+            name: role_access
+            type: VARCHAR(255)
+        - column:
+            name: title
+            type: VARCHAR(255)
+        - column:
+            name: topic
+            type: VARCHAR(255)
+        - column:
+            name: version_date
+            type: date
+        - column:
+            constraints:
+              nullable: false
+            name: creator_id
+            type: BIGINT
+        - column:
+            name: project_id
+            type: BIGINT
+        tableName: article
+- changeSet:
+    id: 1656269436311-6
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: namespace_articles_pkey
+            name: namespaces_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: namespace_articles_pkey
+            name: articles_id
+            type: BIGINT
+        tableName: namespace_articles
+- changeSet:
+    id: 1656269436311-7
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: namespace_projects_pkey
+            name: namespaces_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: namespace_projects_pkey
+            name: projects_id
+            type: BIGINT
+        tableName: namespace_projects
+- changeSet:
+    id: 1656269436311-8
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: namespace_users_pkey
+            name: namespace_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: namespace_users_pkey
+            name: users_id
+            type: BIGINT
+        tableName: namespace_users
+- changeSet:
+    id: 1656269436311-9
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: project_users_pkey
+            name: projects_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: project_users_pkey
+            name: users_id
+            type: BIGINT
+        tableName: project_users
+- changeSet:
+    id: 1656269436311-10
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: tag_pkey
+            name: title
+            type: VARCHAR(255)
+        tableName: tag
+- changeSet:
+    id: 1656269436311-11
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: tags_title
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: articles_id
+            type: BIGINT
+        tableName: tag_articles
+- changeSet:
+    id: 1656269436311-12
+    author: 1 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: users_access_to_articles_pkey
+            name: users_with_access_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: users_access_to_articles_pkey
+            name: access_to_articles_id
+            type: BIGINT
+        tableName: users_access_to_articles
+- changeSet:
+    id: 1656269436311-13
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: users_id
+        baseTableName: project_users
+        constraintName: fk2lsv8p5wntimsy8omcbnscm7m
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1656269436311-14
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: access_to_articles_id
+        baseTableName: users_access_to_articles
+        constraintName: fk3gb86iomn37xlcx4csp25gj18
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: article
+        validate: true
+- changeSet:
+    id: 1656269436311-15
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: users_with_access_id
+        baseTableName: users_access_to_articles
+        constraintName: fk3s3npfu5hxcr5nv1pih0br1x6
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1656269436311-16
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: project_id
+        baseTableName: article
+        constraintName: fk6xnyyd9ovo671ngrjif6d1jtq
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: project
+        validate: true
+- changeSet:
+    id: 1656269436311-17
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: users_id
+        baseTableName: namespace_users
+        constraintName: fk7om317pc6nk03gi8bjqovgj7d
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1656269436311-18
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: namespaces_id
+        baseTableName: namespace_articles
+        constraintName: fk7omlkabc9vexdcw82hicb7cb7
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: namespace
+        validate: true
+- changeSet:
+    id: 1656269436311-19
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: projects_id
+        baseTableName: project_users
+        constraintName: fkbebsjuwxm6ni47vd7wlet2bmp
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: project
+        validate: true
+- changeSet:
+    id: 1656269436311-20
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: creator_id
+        baseTableName: article
+        constraintName: fkjl623nkcbf72b2jfhkrcoykmx
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1656269436311-21
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: articles_id
+        baseTableName: tag_articles
+        constraintName: fklgwplj53en8g523859kcgabkn
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: article
+        validate: true
+- changeSet:
+    id: 1656269436311-22
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: creator_id
+        baseTableName: namespace
+        constraintName: fkpfsu3bsf6q0jxjxu1ewx0jl6c
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1656269436311-23
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: articles_id
+        baseTableName: namespace_articles
+        constraintName: fkr3yrlnt75gceno7v04l0vt5ly
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: article
+        validate: true
+- changeSet:
+    id: 1656269436311-24
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: tags_title
+        baseTableName: tag_articles
+        constraintName: fkrhp0dag8nfjaqg1eim57bbup
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: title
+        referencedTableName: tag
+        validate: true
+- changeSet:
+    id: 1656269436311-25
+    author: 1 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: namespace_id
+        baseTableName: namespace_users
+        constraintName: fktqsi5fi4jg5dr52jcab777qmj
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: namespace
+        validate: true
+
