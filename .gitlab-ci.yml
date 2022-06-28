@@ -1,0 +1,87 @@
+variables:
+  REGISTRY_AUTH_FILE: /etc/containers/auth.json
+  #
+  APP_NAME: "kms"
+  #
+  REGISTRY: "registry.apps.okd.stage.digital.rt.ru"
+  NAMESPACE: 'java-school-2022'
+  APP_IMAGE: '$REGISTRY/$NAMESPACE/$APP_NAME'
+  #
+  TEMP_IMAGE_TAG: "temp_$CI_PIPELINE_ID"
+  HARBOR_REGISTRY: "harbor.digital.rt.ru"
+
+image: '$REGISTRY/openshift/cli:latest'
+
+stages:
+  - build
+  - docker
+  - deploy
+  - clean
+
+build-jar:
+  image: $REGISTRY/openshift/openjdk:11
+  stage: build
+  variables:
+    KUBERNETES_CPU_REQUEST: '3'
+    KUBERNETES_CPU_LIMIT: '3'
+    KUBERNETES_MEMORY_REQUEST: '3Gi'
+    KUBERNETES_MEMORY_LIMIT: '3Gi'
+    KUBERNETES_SERVICE_ACCOUNT_OVERWRITE: 'builder'
+  before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+    - chmod +x ./gradlew
+  script:
+    - ./gradlew assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 day
+  only:
+    - gradle
+  tags:
+    - java2022
+    - private
+    - okd
+
+package-to-docker:
+  image: $REGISTRY/openshift/kaniko:openshift
+  stage: docker
+  variables:
+    KUBERNETES_CPU_REQUEST: '1'
+    KUBERNETES_CPU_LIMIT: '1'
+    KUBERNETES_MEMORY_REQUEST: '2Gi'
+    KUBERNETES_MEMORY_LIMIT: '2Gi'
+    KUBERNETES_SERVICE_ACCOUNT_OVERWRITE: 'builder'
+  script:
+    - cat /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt >> $SSL_CERT_DIR/ca-certificates.crt
+    - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"serviceaccount\",\"password\":\"$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)\"}}}" > $DOCKER_CONFIG/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $APP_IMAGE:$TEMP_IMAGE_TAG --cache=true --cache-repo ${APP_IMAGE}-cache
+  only:
+    - gradle
+  tags:
+    - java2022
+    - private
+    - okd
+
+deploy:
+  stage: deploy
+  script:
+    - oc tag $NAMESPACE/$APP_NAME:$TEMP_IMAGE_TAG $NAMESPACE/$APP_NAME:latest
+  only:
+    - gradle
+  tags:
+    - java2022
+    - private
+    - okd
+
+clean:
+  stage: clean
+  script:
+    - oc delete istag/$APP_NAME:$TEMP_IMAGE_TAG -n $NAMESPACE
+  only:
+    - gradle
+  tags:
+    - java2022
+    - private
+    - okd
+  when: always

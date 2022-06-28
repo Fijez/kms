@@ -24,7 +24,6 @@ ext {
 }
 
 dependencies {
-    implementation 'io.swagger.core.v3:swagger-annotations:2.2.1'
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
     compileOnly 'javax.servlet:jstl'
     compileOnly 'org.apache.tomcat.embed:tomcat-embed-jasper'
