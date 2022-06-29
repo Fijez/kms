@@ -8,59 +8,93 @@
     <style type="text/css">
         @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,300&family=Montserrat:wght@300;400;500;700;900&display=swap');
 
+        body {
+            background-color: #21D4FD;
+            background-image: linear-gradient(90deg, #21D4FD 0%, #B721FF 100%);
+        }
+
         html {
             font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 18px;
+            line-height: 26px;
             font-weight: 400;
             color: #222;
         }
 
         a, a:hover, a:focus, a:active {
+            font-size: 18px;
             text-decoration: none;
-            color: inherit;
+            color: black;
         }
 
         div {
-            font-size: 16px;
+            font-size: 18px;
             line-height: 24px;
             font-weight: 400;
             color: #222;
+            margin: 12px;
         }
 
         h2 {
-            font-size: 36px;
+            font-size: 40px;
             line-height: 42px;
             font-weight: 700;
             margin: 20px;
-            color: DarkSlateGrey;
+            color: white;
         }
 
         h4 {
-            font-size: 24px;
+            font-size: 28px;
             line-height: 42px;
             font-weight: 700;
             margin: 20px;
-            color: DarkSlateGrey;
+            color: white;
         }
 
-        input::placeholder {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            text-align: center;
-        }
+        input {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
 
-        button {
             font-family: 'Montserrat', sans-serif;
             font-size: 18px;
             text-align: center;
-            margin: 20px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            padding: 5px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+
+            width: 300px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            text-align: center;
+            margin: 5px;
         }
 
         .pageForm {
-            margin: 100px auto auto;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+
+            margin: 200px auto auto;
             width: 60%;
-            border: 3px solid MediumSeaGreen;
             padding: 10px;
             text-align: center;
         }
@@ -74,17 +108,26 @@
     <h4>${pageContext.request.userPrincipal.name}</h4>
 </div>
 
-<div class=pageForm style="background-color:PaleGreen;">
+<div class=pageForm>
     <h2>Главная</h2>
     <sec:authorize access="!isAuthenticated()">
-        <button><a href="/login">Войти</a></button>
-        <button><a href="/registration">Зарегистрироваться</a></button>
+        <div>
+            <button><a href="/login">Войти</a></button>
+        </div>
+        <div>
+            <button><a href="/registration">Зарегистрироваться</a></button>
+        </div>
     </sec:authorize>
     <sec:authorize access="isAuthenticated()">
         <button><a href="/logout">Выйти</a></button>
     </sec:authorize>
-    <button><a href="/search">Поиск статей</a></button>
-    <button><a href="/admin">Пользователи (только админ)</a></button>
+    <div>
+        <button><a href="/search">Поиск статей</a></button>
+    </div>
+    <div>
+        <button><a href="/admin">Пользователи (только админ)</a></button>
+    </div>
+    <div></div>
 </div>
 </body>
 </html>
