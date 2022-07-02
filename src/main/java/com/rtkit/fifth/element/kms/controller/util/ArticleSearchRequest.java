@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+//есть ли необходимость в этом классе, если в dto для article будут те же поля?
 public class ArticleSearchRequest {
     private String author;
     private String title;
