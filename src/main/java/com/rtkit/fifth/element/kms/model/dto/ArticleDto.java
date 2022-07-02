@@ -1,25 +1,26 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
 import com.rtkit.fifth.element.kms.model.entity.Namespace;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.rtkit.fifth.element.kms.model.entity.Project;
+import com.rtkit.fifth.element.kms.model.entity.Role;
+import com.rtkit.fifth.element.kms.model.entity.User;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ArticleDto {
 
     private String title;
 
-    private String creator;
+    private User creator;
 
-    private String project;
+    private Project project;
 
     private String author;
 
@@ -29,7 +30,7 @@ public class ArticleDto {
 
     private String content;
 
-    private String roleAccess;
+    private Role roleAccess;
 
     private Set<String> tags;
 
