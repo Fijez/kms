@@ -4,13 +4,15 @@ import com.rtkit.fifth.element.kms.model.entity.Namespace;
 import com.rtkit.fifth.element.kms.model.entity.Project;
 import com.rtkit.fifth.element.kms.model.entity.Role;
 import com.rtkit.fifth.element.kms.model.entity.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

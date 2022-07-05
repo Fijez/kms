@@ -3,6 +3,7 @@ package com.rtkit.fifth.element.kms.controller;
 import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
+import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,6 +26,11 @@ public class ArticleRestController {
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addNewArticle(@RequestBody @Validated Article article) {
         articleService.addNewArticle(article);
+    }
+
+    @PostMapping
+    public List<ArticleDto> specification(@RequestBody List<ArticleSearchCriteria> searchCriteria) {
+        return articleService.searchArticle(searchCriteria);
     }
 
     @GetMapping(value = "/get", consumes = MediaType.APPLICATION_JSON_VALUE)
