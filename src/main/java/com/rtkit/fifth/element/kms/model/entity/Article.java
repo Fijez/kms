@@ -27,15 +27,16 @@ public class Article {
     private long id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
-    @ManyToMany(mappedBy = "accessToArticles")
+    @ManyToMany(mappedBy = "accessToArticles"
+            , fetch = FetchType.LAZY)
     private Set<User> usersWithAccess;
 
-    @OneToOne
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
-    private Project project;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    private Group group;
 
     @Column
     @NotBlank
@@ -56,10 +57,12 @@ public class Article {
 
     private Role roleAccess;
 
-    @ManyToMany(mappedBy = "articles")
+    @ManyToMany(mappedBy = "articles",
+            fetch = FetchType.LAZY)
     private Set<Namespace> namespace;
 
-    @ManyToMany(mappedBy = "articles")
+    @ManyToMany(mappedBy = "articles",
+            fetch = FetchType.LAZY)
     private Set<Tag> tags;
 
 }

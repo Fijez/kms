@@ -16,8 +16,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity(name = "project")
-public class Project {
+@Entity(name = "group")
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,13 @@ public class Project {
     @Column
     private String title;
 
-    @OneToOne(mappedBy = "project")
+    @Column
+    private String description;
+
+    @OneToOne(mappedBy = "group",
+            fetch = FetchType.LAZY)
     private Article article;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> users;
 }

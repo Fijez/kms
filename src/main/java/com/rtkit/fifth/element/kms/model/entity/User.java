@@ -28,16 +28,19 @@ public class User implements UserDetails {
     @Min(0)
     private long id;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator",
+            fetch = FetchType.LAZY)
     private Set<Article> createdArticles;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator",
+            fetch = FetchType.LAZY)
     private Set<Namespace> createdNamespaces;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Project> projects;
+    @ManyToMany(mappedBy = "users",
+            fetch = FetchType.LAZY)
+    private Set<Group> groups;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Article> accessToArticles;
 
     @NotBlank
@@ -61,7 +64,8 @@ public class User implements UserDetails {
 
     private Role role;
 
-    @ManyToMany(mappedBy = "articles")
+    @ManyToMany(mappedBy = "articles",
+            fetch = FetchType.LAZY)
     private Set<Namespace> Namespaces;
 
 

@@ -25,12 +25,12 @@ public class Namespace {
     @Column
     private String title;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> users;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Article> articles;
 }
