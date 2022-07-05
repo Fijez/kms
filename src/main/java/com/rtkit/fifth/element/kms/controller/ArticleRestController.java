@@ -1,6 +1,6 @@
 package com.rtkit.fifth.element.kms.controller;
 
-import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
+import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
@@ -34,7 +34,7 @@ public class ArticleRestController {
     }
 
     @GetMapping(value = "/get", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ArticleDto> getArticle(@RequestBody ArticleSearchRequest searchRequest) {
+    public List<ArticleDto> getArticle(@RequestBody ArticleSearchDto searchRequest) {
         return articleService.searchArticle(searchRequest);
     }
 }

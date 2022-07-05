@@ -1,4 +1,4 @@
-package com.rtkit.fifth.element.kms.controller.util;
+package com.rtkit.fifth.element.kms.model.dto;
 
 import com.rtkit.fifth.element.kms.model.entity.Namespace;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleSearchRequest {
+public class ArticleSearchDto {
 
     private String title;
 

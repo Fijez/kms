@@ -1,6 +1,6 @@
 package com.rtkit.fifth.element.kms.service.implementation;
 
-import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
+import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
@@ -55,7 +55,7 @@ public class ArticleServiceImplementation implements ArticleService {
     }
 
     @Override
-    public List<ArticleDto> searchArticle(ArticleSearchRequest searchRequest) {
+    public List<ArticleDto> searchArticle(ArticleSearchDto searchRequest) {
         List<ArticleDto> articleDtos = new ArrayList<>();
         List<Article> articles = articleRepo.findByTitleAndAuthorAndTopicAndVersionDateAndProjectAndNamespace(
                 searchRequest.getTitle(),

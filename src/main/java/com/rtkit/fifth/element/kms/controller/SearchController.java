@@ -1,6 +1,6 @@
 package com.rtkit.fifth.element.kms.controller;
 
-import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
+import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class SearchController {
     }
 
     @GetMapping("/search")
-    public List<ArticleDto> search(ArticleSearchRequest article) {
+    public List<ArticleDto> search(ArticleSearchDto article) {
         return articleService.searchArticle(article);
     }
 
