@@ -5,7 +5,7 @@ import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 
 public interface ArticleService {
-    void addNewArticle(Article article);
+    void addNewArticle(ArticleDto article);
 
     ArticleDto searchArticle(ArticleSearchRequest searchRequest);
 }

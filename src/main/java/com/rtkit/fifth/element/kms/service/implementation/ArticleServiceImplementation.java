@@ -3,12 +3,18 @@ package com.rtkit.fifth.element.kms.service.implementation;
 import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
+import com.rtkit.fifth.element.kms.model.entity.Role;
+import com.rtkit.fifth.element.kms.model.entity.User;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
-import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import com.rtkit.fifth.element.kms.repository.ArticleRepo;
+import com.rtkit.fifth.element.kms.repository.UserRepo;
+import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,15 +23,30 @@ public class ArticleServiceImplementation implements ArticleService {
     private final ArticleRepo articleRepo;
     private final ArticleMapper articleMapper;
 
+    private final UserRepo userRepo;
     @Autowired
-    public ArticleServiceImplementation(ArticleRepo articleRepo, ArticleMapper articleMapper) {
+    public ArticleServiceImplementation(ArticleRepo articleRepo, ArticleMapper articleMapper, UserRepo userRepo) {
         this.articleRepo = articleRepo;
         this.articleMapper = articleMapper;
+        this.userRepo = userRepo;
     }
 
     @Override
     @Transactional
-    public void addNewArticle(Article article) {
+    public void addNewArticle(ArticleDto articleDto) {
+        Article article = new Article();
+        article.setProject(null);
+        article.setUsersWithAccess(null);
+        article.setNamespace(null);
+        article.setTags(null);
+        article.setId(articleDto.getId());
+        article.setAuthor(articleDto.getAuthor());
+        article.setContent(articleDto.getContent());
+        article.setTitle(articleDto.getTitle());
+        article.setTopic(articleDto.getTopic());
+        article.setVersionDate(new Date());
+        article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
+        article.setRoleAccess(Role.USER);
         articleRepo.saveAndFlush(article);
     }
 

@@ -1,4 +1,4 @@
-package com.rtkit.fifth.element.kms.model.user.info;
+package com.rtkit.fifth.element.kms.model.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

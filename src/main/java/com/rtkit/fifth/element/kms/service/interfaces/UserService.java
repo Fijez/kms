@@ -1,7 +1,7 @@
 package com.rtkit.fifth.element.kms.service.interfaces;
 
 import com.rtkit.fifth.element.kms.model.entity.User;
-import com.rtkit.fifth.element.kms.model.user.info.UserRegistrationInfo;
+import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -48,9 +48,9 @@ public class Article {
     private String topic;
 
     @Column
-    private LocalDate versionDate;
+    private Date versionDate;
 
-    @Lob
+    @Lob //Ќе работает как нужно (сохран€ет в непон€тном виде)
     @Basic(fetch = FetchType.LAZY)
     private String content;
 
