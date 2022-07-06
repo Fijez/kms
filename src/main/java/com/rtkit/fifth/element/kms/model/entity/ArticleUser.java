@@ -7,18 +7,18 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity(name = "articles_groups")
+@Entity(name = "articles_users")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleGroup {
+public class ArticleUser {
 
 
     @EmbeddedId
-    ArticleGroupId id;
+    ArticleUserId id;
 
-    private Role groupRole;
+    private Role userRole;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId(value = "articleId")
@@ -26,11 +26,7 @@ public class ArticleGroup {
     private Article article;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId(value = "groupId")
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @MapsId(value = "userId")
+    @JoinColumn(name = "user_id")
+    private User user;
 }
-
-
-
-

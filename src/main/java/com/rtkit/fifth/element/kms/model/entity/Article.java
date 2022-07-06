@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -30,16 +31,19 @@ public class Article {
     @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
-    @ManyToMany(mappedBy = "accessToArticles"
-            , fetch = FetchType.LAZY)
-    private Set<User> usersWithAccess;
+    @OneToMany(mappedBy = "article",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    private Set<ArticleUser> users;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
-    private Group group;
+    @OneToMany(mappedBy = "article",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    private List<ArticleGroup> groups;
 
     @Column
     @NotBlank
+//    @NaturalId ?????????
     private String title;
 
     @Column
@@ -57,12 +61,16 @@ public class Article {
 
     private Role roleAccess;
 
+
     @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST,
+                    CascadeType.REFRESH})
     private Set<Namespace> namespace;
 
     @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST})
     private Set<Tag> tags;
 
 }

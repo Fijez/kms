@@ -25,7 +25,8 @@ public class Namespace {
     @Column
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
     private Set<User> users;
 
     @ManyToOne(fetch = FetchType.LAZY)

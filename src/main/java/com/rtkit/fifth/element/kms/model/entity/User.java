@@ -29,19 +29,24 @@ public class User implements UserDetails {
     private long id;
 
     @OneToMany(mappedBy = "creator",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE})
     private Set<Article> createdArticles;
 
     @OneToMany(mappedBy = "creator",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE})
     private Set<Namespace> createdNamespaces;
 
     @ManyToMany(mappedBy = "users",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Group> groups;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Article> accessToArticles;
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    private Set<ArticleUser> articles;
 
     @NotBlank
     @Email
@@ -65,7 +70,8 @@ public class User implements UserDetails {
     private Role role;
 
     @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY)
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
     private Set<Namespace> Namespaces;
 
 

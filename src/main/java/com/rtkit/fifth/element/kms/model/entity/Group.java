@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -31,9 +32,8 @@ public class Group {
     @Column
     private String description;
 
-    @OneToOne(mappedBy = "group",
-            fetch = FetchType.LAZY)
-    private Article article;
+    @OneToMany(mappedBy = "group")
+    private List<ArticleGroup> articles;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> users;

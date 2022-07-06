@@ -21,6 +21,7 @@ public class Tag {
     @Id
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,
+    cascade = {CascadeType.REFRESH})
     private List<Article> articles;
 }
