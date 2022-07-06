@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleSearchRequest {
+public class ArticleSearchDto {
     private String author;
     private String title;
     private String phrase;

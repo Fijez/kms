@@ -1,6 +1,6 @@
 package com.rtkit.fifth.element.kms.controller;
 
-import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
+import com.rtkit.fifth.element.kms.controller.util.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import org.springframework.http.MediaType;
@@ -23,7 +23,7 @@ public class ArticleRestController {
     }
 
     @GetMapping(value = "/get", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Article getArticle(@RequestBody ArticleSearchRequest searchRequest) {
+    public Article getArticle(@RequestBody ArticleSearchDto searchRequest) {
         return null;
     }
 }
