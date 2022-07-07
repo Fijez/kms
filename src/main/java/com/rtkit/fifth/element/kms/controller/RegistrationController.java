@@ -1,7 +1,7 @@
 package com.rtkit.fifth.element.kms.controller;
 
 import com.rtkit.fifth.element.kms.model.entity.User;
-import com.rtkit.fifth.element.kms.model.user.info.UserRegistrationInfo;
+import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

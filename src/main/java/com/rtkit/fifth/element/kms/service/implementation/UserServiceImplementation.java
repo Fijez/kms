@@ -3,7 +3,7 @@ package com.rtkit.fifth.element.kms.service.implementation;
 import com.rtkit.fifth.element.kms.model.entity.Role;
 import com.rtkit.fifth.element.kms.model.entity.User;
 import com.rtkit.fifth.element.kms.model.mapper.UserMapper;
-import com.rtkit.fifth.element.kms.model.user.info.UserRegistrationInfo;
+import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
 import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

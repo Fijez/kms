@@ -1,5 +1,6 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
+import com.rtkit.fifth.element.kms.model.entity.Article;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleDto {
-
+public class ArticleUpdateDto {
     @NotBlank
     private int id;
     private String title;
@@ -20,4 +20,12 @@ public class ArticleDto {
     private String topic;
     private String content;
     private String creator;
+    public ArticleUpdateDto(Article article){
+        this.id=(int)article.getId();
+        this.title=article.getTitle();
+        this.author=article.getAuthor();
+        this.topic=article.getTopic();
+        this.content=article.getContent();
+        this.creator=article.getCreator().getEmail();
+    }
 }
