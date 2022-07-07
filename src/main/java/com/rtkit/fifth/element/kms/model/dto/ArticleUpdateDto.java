@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ArticleUpdateDto {
+
     @NotBlank
     private int id;
     private String title;
@@ -20,12 +21,13 @@ public class ArticleUpdateDto {
     private String topic;
     private String content;
     private String creator;
-    public ArticleUpdateDto(Article article){
-        this.id=(int)article.getId();
-        this.title=article.getTitle();
-        this.author=article.getAuthor();
-        this.topic=article.getTopic();
-        this.content=article.getContent();
-        this.creator=article.getCreator().getEmail();
+
+    public ArticleUpdateDto(Article article) {
+        this.id = (int) article.getId();
+        this.title = article.getTitle();
+        this.author = article.getAuthor();
+        this.topic = article.getTopic();
+        this.content = article.getContent();
+        this.creator = article.getCreator().getEmail();
     }
 }
