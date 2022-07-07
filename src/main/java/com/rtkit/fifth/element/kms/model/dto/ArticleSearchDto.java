@@ -1,4 +1,4 @@
-package com.rtkit.fifth.element.kms.controller.util;
+package com.rtkit.fifth.element.kms.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

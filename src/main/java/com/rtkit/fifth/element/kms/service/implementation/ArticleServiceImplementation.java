@@ -1,6 +1,6 @@
 package com.rtkit.fifth.element.kms.service.implementation;
 
-import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
+import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
@@ -36,8 +36,8 @@ public class ArticleServiceImplementation implements ArticleService {
     @Transactional
     public void addNewArticle(ArticleDto articleDto) {
         Article article = new Article();
-        article.setProject(null);
-        article.setUsersWithAccess(null);
+        article.setGroups(null);
+        article.setUsers(null);
         article.setNamespace(null);
         article.setTags(null);
         article.setId(articleDto.getId());
@@ -53,7 +53,7 @@ public class ArticleServiceImplementation implements ArticleService {
 
     public Article findById (Long id)
     {
-        return articleRepo.findById(id).orElseThrow(() -> new RuntimeException("Статья не найдена"));
+        return articleRepo.findById(id).orElseThrow(() -> new RuntimeException("РЎС‚Р°С‚СЊСЏ РЅРµ РЅР°Р№РґРµРЅР°"));
     }
 
     @Override

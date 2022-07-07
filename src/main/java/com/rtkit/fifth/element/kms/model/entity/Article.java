@@ -55,7 +55,7 @@ public class Article {
     @Column
     private Date versionDate;
 
-    @Lob //Не работает как нужно (сохраняет в непонятном виде)
+    @Lob //РќРµ СЂР°Р±РѕС‚Р°РµС‚ РєР°Рє РЅСѓР¶РЅРѕ (СЃРѕС…СЂР°РЅСЏРµС‚ РІ РЅРµРїРѕРЅСЏС‚РЅРѕРј РІРёРґРµ)
     @Basic(fetch = FetchType.LAZY)
     private String content;
 
