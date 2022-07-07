@@ -59,17 +59,22 @@ public class ArticleServiceImplementation implements ArticleService {
     @Override
     @Transactional
     public ArticleUpdateDto update(ArticleUpdateDto articleUpdateDto) {
-        long id = articleUpdateDto.getId();
-        var article = findById(id);
-        if (articleUpdateDto.getAuthor() != null)
-            article.setAuthor(articleUpdateDto.getAuthor());
-        if (articleUpdateDto.getContent() != null)
-            article.setContent(articleUpdateDto.getContent());
+        var article = findById(articleUpdateDto.getId());
+
         article.setTitle(articleUpdateDto.getTitle());
-        if (articleUpdateDto.getTopic() != null)
-            article.setTopic(articleUpdateDto.getTopic());
         article.setVersionDate(new Date());
         article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
+
+        if (articleUpdateDto.getAuthor() != null) {
+            article.setAuthor(articleUpdateDto.getAuthor());
+        }
+        if (articleUpdateDto.getContent() != null) {
+            article.setContent(articleUpdateDto.getContent());
+        }
+        if (articleUpdateDto.getTopic() != null) {
+            article.setTopic(articleUpdateDto.getTopic());
+        }
+
         articleRepo.save(article);
         return new ArticleUpdateDto(article);
     }
