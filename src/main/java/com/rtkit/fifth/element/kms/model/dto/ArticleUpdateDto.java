@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 public class ArticleUpdateDto {
 
     @NotBlank
-    private int id;
+    private long id;
     private String title;
     private String author;
     private String topic;
@@ -23,7 +23,7 @@ public class ArticleUpdateDto {
     private String creator;
 
     public ArticleUpdateDto(Article article) {
-        this.id = (int) article.getId();
+        this.id = article.getId();
         this.title = article.getTitle();
         this.author = article.getAuthor();
         this.topic = article.getTopic();
