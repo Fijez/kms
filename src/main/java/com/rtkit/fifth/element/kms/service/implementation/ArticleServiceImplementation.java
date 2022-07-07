@@ -2,6 +2,7 @@ package com.rtkit.fifth.element.kms.service.implementation;
 
 import com.rtkit.fifth.element.kms.controller.util.ArticleSearchRequest;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
+import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.entity.Role;
 import com.rtkit.fifth.element.kms.model.entity.User;
@@ -47,11 +48,29 @@ public class ArticleServiceImplementation implements ArticleService {
         article.setVersionDate(new Date());
         article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
         article.setRoleAccess(Role.USER);
-        articleRepo.saveAndFlush(article);
+        articleRepo.save(article);
+    }
+
+    public Article findById (Long id)
+    {
+        return articleRepo.findById(id).orElseThrow(() -> new RuntimeException("Статья не найдена"));
     }
 
     @Override
-    public ArticleDto searchArticle(ArticleSearchRequest searchRequest) {
-        return articleMapper.modelToDto(null);
+    @Transactional
+    public ArticleUpdateDto update( ArticleUpdateDto articleUpdateDto) {
+        long id =articleUpdateDto.getId();
+        var article = findById(id);
+        if(articleUpdateDto.getAuthor() != null)
+        article.setAuthor(articleUpdateDto.getAuthor());
+        if(articleUpdateDto.getContent() != null)
+        article.setContent(articleUpdateDto.getContent());
+        article.setTitle(articleUpdateDto.getTitle());
+        if(articleUpdateDto.getTopic() != null)
+        article.setTopic(articleUpdateDto.getTopic());
+        article.setVersionDate(new Date());
+        article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
+        articleRepo.save(article);
+        return new ArticleUpdateDto(article);
     }
 }
