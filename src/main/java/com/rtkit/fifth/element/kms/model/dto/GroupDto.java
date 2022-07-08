@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProjectDto {
+public class GroupDto {
 
     private long id;
 

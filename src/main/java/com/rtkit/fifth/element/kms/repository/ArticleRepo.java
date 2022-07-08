@@ -2,7 +2,7 @@ package com.rtkit.fifth.element.kms.repository;
 
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.entity.Namespace;
-import com.rtkit.fifth.element.kms.model.entity.Project;
+import com.rtkit.fifth.element.kms.model.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -16,8 +16,8 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public interface ArticleRepo extends JpaRepository<Article, Long>, JpaSpecificationExecutor {
     //накидал быстрый пример
-    List<Article> findByTitleAndAuthorAndTopicAndVersionDateAndProjectAndNamespace(
-            String title, String author, String topic, LocalDate versionDate, Project project,
-            Set<Namespace> namespace
-    );
+//    List<Article> findByTitleAndAuthorAndTopicAndVersionDateAndGroupAndNamespace(
+//            String title, String author, String topic, LocalDate versionDate, Group group,
+//            Set<Namespace> namespace
+//    );
 }

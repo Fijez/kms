@@ -20,10 +20,10 @@ import java.util.List;
 @RequestMapping("/article")
 public class ArticleRestController {
 
-    private final ArticleServiceImplementation articleService;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticleRestController(ArticleService articleService) {
+    public ArticleRestController(ArticleServiceImplementation articleService) {
         this.articleService = articleService;
     }
 

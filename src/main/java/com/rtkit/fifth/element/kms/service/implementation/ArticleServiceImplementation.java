@@ -1,18 +1,24 @@
 package com.rtkit.fifth.element.kms.service.implementation;
 
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
+import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
+import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.entity.Role;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.repository.ArticleRepo;
+import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
+import com.rtkit.fifth.element.kms.repository.ArticleSpecification;
 import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
-import com.rtkit.fifth.element.kms.service.interfaces.ProjectService;
+import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,21 +26,23 @@ public class ArticleServiceImplementation implements ArticleService {
 
     private final ArticleRepo articleRepo;
     private final ArticleMapper articleMapper;
-    private final ProjectService projectService;
+    private final GroupService groupService;
 
     private final UserRepo userRepo;
 
     @Autowired
     public ArticleServiceImplementation(ArticleRepo articleRepo
             , ArticleMapper articleMapper
-            , ProjectService projectService
+            , GroupService groupService
             , UserRepo userRepo) {
         this.articleRepo = articleRepo;
         this.articleMapper = articleMapper;
-        this.projectService = projectService;
+        this.groupService = groupService;
         this.userRepo = userRepo;
     }
 
+    //TODO: реализовать добавление полей которые сейчас null, или убрать их
+    // путем создания ArticleAddDto, или другим способом
     @Override
     @Transactional
     public void addNewArticle(ArticleDto articleDto) {
@@ -51,6 +59,7 @@ public class ArticleServiceImplementation implements ArticleService {
                 .topic(articleDto.getTopic())
                 .versionDate(new Date())
                 .creator(userRepo.findByEmail(articleDto.getCreator()))
+//                .creator(articleDto.getCreator())
                 .roleAccess(Role.USER)
                 .build();
 
@@ -64,8 +73,7 @@ public class ArticleServiceImplementation implements ArticleService {
     @Override
     public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
         ArticleSpecification appleSpecification = new ArticleSpecification();
-        searchCriteria.stream().map(searchCriterion -> new ArticleSearchCriteria(searchCriterion.getKey(),
-                searchCriterion.getValue(), searchCriterion.getOperation())).forEach(appleSpecification::add);
+        appleSpecification.add(searchCriteria);
 
         List<ArticleDto> articleDtos = new ArrayList<>();
         List<Article> articles = articleRepo.findAll(appleSpecification);
@@ -77,20 +85,23 @@ public class ArticleServiceImplementation implements ArticleService {
         return articleDtos;
     }
 
+
+
+    //TODO: разобраться, нужен ли такой метод
     @Override
     public List<ArticleDto> searchArticle(ArticleSearchDto searchRequest) {
         List<ArticleDto> articleDtos = new ArrayList<>();
-        List<Article> articles = articleRepo.findByTitleAndAuthorAndTopicAndVersionDateAndProjectAndNamespace(
-                searchRequest.getTitle(),
-                searchRequest.getAuthor(),
-                searchRequest.getTopic(),
-                searchRequest.getVersionDate(),
-                projectService.getProject(searchRequest.getProject()),
-                searchRequest.getNamespaces());
+//        List<Article> articles = articleRepo.findByTitleAndAuthorAndTopicAndVersionDateAndGroupAndNamespace(
+//                searchRequest.getTitle(),
+//                searchRequest.getAuthor(),
+//                searchRequest.getTopic(),
+//                searchRequest.getVersionDate(),
+//                groupService.getGroup(searchRequest.getGroup()),
+//                searchRequest.getNamespaces());
 
-        for (Article a : articles) {
-            articleDtos.add(articleMapper.modelToDto(a));
-        }
+//        for (Article a : articles) {
+//            articleDtos.add(articleMapper.modelToDto(a));
+//        }
 
         return articleDtos;
     }

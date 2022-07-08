@@ -19,7 +19,7 @@ public class ArticleSearchDto {
 
     private String creator;
 
-    private String project;
+    private String group;
 
     private String author;
 

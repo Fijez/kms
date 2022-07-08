@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ArticleService {
 
-    void addNewArticle(Article article);
+    void addNewArticle(ArticleDto article);
 
     List <ArticleDto> searchArticle(ArticleSearchDto searchRequest);
 
