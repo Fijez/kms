@@ -2,6 +2,7 @@ package com.rtkit.fifth.element.kms.service.implementation;
 
 import com.rtkit.fifth.element.kms.service.interfaces.NamespaceService;
 import com.rtkit.fifth.element.kms.repository.NamespaceRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,7 @@ public class NamespaceServiceImplementation implements NamespaceService {
 
     private final NamespaceRepo namespaceRepo;
 
+    @Autowired
     public NamespaceServiceImplementation(NamespaceRepo namespaceRepo) {
         this.namespaceRepo = namespaceRepo;
     }
