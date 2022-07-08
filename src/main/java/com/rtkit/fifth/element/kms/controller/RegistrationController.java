@@ -21,10 +21,10 @@ public class RegistrationController {
         this.userService = userService;
     }
 
+    // TODO: использовать ResponseEntity как возвращаемое значение
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("userForm", new User());
-
         return "registration";
     }
 

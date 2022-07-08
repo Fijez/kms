@@ -4,9 +4,16 @@ import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
+import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
+
+import java.util.List;
 
 public interface ArticleService {
-    void addNewArticle(ArticleDto article);
 
+    void addNewArticle(Article article);
+
+    List <ArticleDto> searchArticle(ArticleSearchDto searchRequest);
+
+    List <ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria);
     ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto);
 }
