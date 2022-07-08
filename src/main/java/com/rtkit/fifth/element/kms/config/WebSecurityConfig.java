@@ -11,7 +11,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@SuppressWarnings("deprecation")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static final String[] ALL = {"/", "/resources/**"};
+    private static final String[] UNAUTHORIZED = {"/registration"};
+    private static final String[] UI = {"/swagger-ui/**"};
+    private static final String[] ADMIN = {"/admin/**"};
+    private static final String[] AUTHORIZED = {"/search"};
+
+    private static final String LOGIN_PAGE = "/login";
+    private static final String INDEX_PAGE = "/";
+    private static final String ADMIN_ROLE = "ADMIN";
 
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -28,27 +39,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**").permitAll()
-                //Доступ только для не зарегистрированных пользователей
-                .antMatchers("/registration").not().fullyAuthenticated()
-                //Доступ только для пользователей с ролью Администратор
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                //Доступ разрешен всем пользователей
-                .antMatchers("/", "/resources/**").permitAll()
-                //Все остальные страницы требуют аутентификации
-                .antMatchers("/search").authenticated()
+                .antMatchers(UI).permitAll()
+                .antMatchers(UNAUTHORIZED).not().fullyAuthenticated()
+                .antMatchers(ADMIN).hasRole(ADMIN_ROLE)
+                .antMatchers(ALL).permitAll()
+                .antMatchers(AUTHORIZED).authenticated()
                 .anyRequest().authenticated()
-                .and()
-                //Настройка для входа в систему
-                .formLogin()
-                .loginPage("/login")
-                //Перенарпавление на главную страницу после успешного входа
-                .defaultSuccessUrl("/")
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll()
-                .logoutSuccessUrl("/");
+                .and().formLogin().loginPage(LOGIN_PAGE)
+                .defaultSuccessUrl(INDEX_PAGE).permitAll()
+                .and().logout().permitAll().logoutSuccessUrl(INDEX_PAGE);
     }
 
     @Autowired

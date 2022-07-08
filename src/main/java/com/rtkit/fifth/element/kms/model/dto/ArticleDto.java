@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//TODO: разобраться с видом DTO
+//TODO: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ DTO
 public class ArticleDto {
 
     @NotBlank

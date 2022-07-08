@@ -1,17 +1,13 @@
 package com.rtkit.fifth.element.kms.controller;
 
-import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
+import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
-import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
-import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
-import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
+import com.rtkit.fifth.element.kms.service.implementation.ArticleServiceImplementation;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.rtkit.fifth.element.kms.service.implementation.ArticleServiceImplementation;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +28,14 @@ public class ArticleRestController {
         articleService.addNewArticle(articleDto);
     }
 
-    @PostMapping
+    @PostMapping(value = "/search")
     public List<ArticleDto> specification(@RequestBody List<ArticleSearchCriteria> searchCriteria) {
         return articleService.searchArticle(searchCriteria);
+    }
+
+    @GetMapping("/find")
+    public List<ArticleDto> search(ArticleSearchDto article) {
+        return articleService.searchArticle(article);
     }
 
     @GetMapping(value = "/get", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -43,8 +44,7 @@ public class ArticleRestController {
     }
 
     @PostMapping(value = "/update")
-    public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto)
-    {
+    public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
         return articleService.update(articleUpdateDto);
     }
 }
