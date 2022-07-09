@@ -17,10 +17,8 @@ public class UserDto {
 
     private Long id;
 
-    @NotBlank
     private String email;
 
-    @NotBlank
     private String name;
 
     private Role role;

@@ -95,9 +95,6 @@ public class ArticleServiceImplementation implements ArticleService {
         article.setVersionDate(new Date());
         article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
 
-        if (articleUpdateDto.getAuthor() != null) {
-            article.setAuthor(articleUpdateDto.getAuthor());
-        }
         if (articleUpdateDto.getContent() != null) {
             article.setContent(articleUpdateDto.getContent());
         }

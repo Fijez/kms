@@ -55,17 +55,17 @@ public class User implements UserDetails {
 
     @NotBlank
     @Size(min = 5, max = 20,
-            message = "Не меньше 5 знаков и не более 20 знаков")
+            message = "РќРµ РјРµРЅСЊС€Рµ 5 Р·РЅР°РєРѕРІ Рё РЅРµ Р±РѕР»РµРµ 20 Р·РЅР°РєРѕРІ")
     @Column
     private String name;
 
     @NotBlank
-    @Size(min = 5, message = "Не меньше 5 знаков")
+    @Size(min = 5, message = "РќРµ РјРµРЅСЊС€Рµ 5 Р·РЅР°РєРѕРІ")
     @Column
     private String password;
 
-    //TODO: разобраться, почему это должно быть реализовано здесь,
-    // а не на стороне клиента
+    //TODO: СЂР°Р·РѕР±СЂР°С‚СЊСЃСЏ, РїРѕС‡РµРјСѓ СЌС‚Рѕ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЂРµР°Р»РёР·РѕРІР°РЅРѕ Р·РґРµСЃСЊ,
+    // Р° РЅРµ РЅР° СЃС‚РѕСЂРѕРЅРµ РєР»РёРµРЅС‚Р°
     @Transient
     private String passwordConfirm;
 

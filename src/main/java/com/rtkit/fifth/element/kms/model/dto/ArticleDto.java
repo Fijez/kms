@@ -22,9 +22,7 @@ public class ArticleDto {
 //
     private String title;
 
-    private UserDto creator;
-
-    private GroupDto group;
+    private String creator;
 
 //    private String author;
 
@@ -36,12 +34,12 @@ public class ArticleDto {
 
     private Role roleAccess;
 
-    private Set<Tag> tags;
-
-    private Set<NamespaceDto> namespaces;
-
-    private Set<UserDto> users;
-
-    private List<GroupDto> groups;
+//    private Set<Tag> tags;
+//
+//    private Set<NamespaceDto> namespaces;
+//
+//    private Set<UserDto> users;
+//
+//    private List<GroupDto> groups;
 
 }

@@ -33,16 +33,6 @@ public class ArticleRestController {
         return articleService.searchArticle(searchCriteria);
     }
 
-    @GetMapping("/find")
-    public List<ArticleDto> search(ArticleSearchDto article) {
-        return articleService.searchArticle(article);
-    }
-
-    @GetMapping(value = "/get", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<ArticleDto> getArticle(@RequestBody ArticleSearchDto searchRequest) {
-        return articleService.searchArticle(searchRequest);
-    }
-
     @PostMapping(value = "/update")
     public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
         return articleService.update(articleUpdateDto);

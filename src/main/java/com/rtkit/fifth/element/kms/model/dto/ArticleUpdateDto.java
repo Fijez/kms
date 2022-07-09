@@ -17,7 +17,6 @@ public class ArticleUpdateDto {
     @NotBlank
     private Long id;
     private String title;
-    private String author;
     private String topic;
     private String content;
     private String creator;
@@ -25,7 +24,6 @@ public class ArticleUpdateDto {
     public ArticleUpdateDto(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
-        this.author = article.getAuthor();
         this.topic = article.getTopic();
         this.content = article.getContent();
         this.creator = article.getCreator().getEmail();
