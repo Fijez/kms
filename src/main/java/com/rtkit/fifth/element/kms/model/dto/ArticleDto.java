@@ -1,9 +1,6 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
-import com.rtkit.fifth.element.kms.model.entity.Namespace;
-import com.rtkit.fifth.element.kms.model.entity.Group;
-import com.rtkit.fifth.element.kms.model.entity.Role;
-import com.rtkit.fifth.element.kms.model.entity.User;
+import com.rtkit.fifth.element.kms.model.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,39 +8,40 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//TODO: ����������� � ����� DTO
+
 public class ArticleDto {
 
-    @NotBlank
-    private int id;
+    private Long id;
 //
     private String title;
-//
-//    private User creator;
-//
-//    private Group group;
-//
+
+    private UserDto creator;
+
+    private GroupDto group;
+
 //    private String author;
-//
-//    private String topic;
-//
-//    private LocalDate versionDate;
-//
-//    private String content;
-//
-//    private Role roleAccess;
-//
-//    private Set<String> tags;
-//
-//    private Set<Namespace> namespaces;
-    private String author;
+
     private String topic;
+
+    private LocalDate versionDate;
+
     private String content;
-    private String creator;
+
+    private Role roleAccess;
+
+    private Set<Tag> tags;
+
+    private Set<NamespaceDto> namespaces;
+
+    private Set<UserDto> users;
+
+    private List<GroupDto> groups;
+
 }

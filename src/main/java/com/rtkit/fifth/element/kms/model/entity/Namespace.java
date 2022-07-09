@@ -20,7 +20,7 @@ public class Namespace {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Min(0)
-    private long id;
+    private Long id;
 
     @Column
     private String title;

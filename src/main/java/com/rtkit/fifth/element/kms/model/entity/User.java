@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Min(0)
-    private long id;
+    private Long id;
 
     @OneToMany(mappedBy = "creator",
             fetch = FetchType.LAZY,
@@ -55,15 +55,17 @@ public class User implements UserDetails {
 
     @NotBlank
     @Size(min = 5, max = 20,
-            message = "РќРµ РјРµРЅСЊС€Рµ 5 Р·РЅР°РєРѕРІ Рё РЅРµ Р±РѕР»РµРµ 20 Р·РЅР°РєРѕРІ")
+            message = "Не меньше 5 знаков и не более 20 знаков")
     @Column
     private String name;
 
     @NotBlank
-    @Size(min = 5, message = "РќРµ РјРµРЅСЊС€Рµ 5 Р·РЅР°РєРѕРІ")
+    @Size(min = 5, message = "Не меньше 5 знаков")
     @Column
     private String password;
 
+    //TODO: разобраться, почему это должно быть реализовано здесь,
+    // а не на стороне клиента
     @Transient
     private String passwordConfirm;
 

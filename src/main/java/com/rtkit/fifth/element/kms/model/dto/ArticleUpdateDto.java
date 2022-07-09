@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 public class ArticleUpdateDto {
 
     @NotBlank
-    private long id;
+    private Long id;
     private String title;
     private String author;
     private String topic;

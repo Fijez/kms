@@ -12,8 +12,6 @@ public interface ArticleService {
 
     void addNewArticle(ArticleDto article);
 
-    List <ArticleDto> searchArticle(ArticleSearchDto searchRequest);
-
     List <ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria);
     ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto);
 }

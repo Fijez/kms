@@ -1,23 +1,24 @@
 package com.rtkit.fifth.element.kms.model.entity;
 
 import lombok.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.Date;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 
 @Entity(name = "article")
 public class Article {
@@ -26,28 +27,31 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private User creator;
 
     @OneToMany(mappedBy = "article",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
+    @ToString.Exclude
     private Set<ArticleUser> users;
 
     @OneToMany(mappedBy = "article",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
+    @ToString.Exclude
     private List<ArticleGroup> groups;
 
     @Column
     @NotBlank
     private String title;
 
-    @Column
-    private String author;
+//    @Column
+//    private String author;
 
     @Column
     private String topic;
@@ -55,8 +59,8 @@ public class Article {
     @Column
     private Date versionDate;
 
-    @Lob //Не работает как нужно (сохраняет в непонятном виде)
     @Basic(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private String content;
 
     private Role roleAccess;
@@ -66,11 +70,25 @@ public class Article {
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST,
                     CascadeType.REFRESH})
+    @ToString.Exclude
     private Set<Namespace> namespace;
 
     @ManyToMany(mappedBy = "articles",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST})
+    @ToString.Exclude
     private Set<Tag> tags;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Article article = (Article) o;
+        return id != null && Objects.equals(id, article.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -23,7 +23,7 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Min(0)
-    private long id;
+    private Long id;
 
     @NotBlank
     @Column

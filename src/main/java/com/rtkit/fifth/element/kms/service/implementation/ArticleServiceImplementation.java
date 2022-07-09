@@ -53,7 +53,6 @@ public class ArticleServiceImplementation implements ArticleService {
                 .namespace(null)
                 .tags(null)
                 .id(articleDto.getId())
-                .author(articleDto.getAuthor())
                 .content(articleDto.getContent())
                 .title(articleDto.getTitle())
                 .topic(articleDto.getTopic())
@@ -87,24 +86,7 @@ public class ArticleServiceImplementation implements ArticleService {
 
 
 
-    //TODO: разобраться, нужен ли такой метод
-    @Override
-    public List<ArticleDto> searchArticle(ArticleSearchDto searchRequest) {
-        List<ArticleDto> articleDtos = new ArrayList<>();
-//        List<Article> articles = articleRepo.findByTitleAndAuthorAndTopicAndVersionDateAndGroupAndNamespace(
-//                searchRequest.getTitle(),
-//                searchRequest.getAuthor(),
-//                searchRequest.getTopic(),
-//                searchRequest.getVersionDate(),
-//                groupService.getGroup(searchRequest.getGroup()),
-//                searchRequest.getNamespaces());
 
-//        for (Article a : articles) {
-//            articleDtos.add(articleMapper.modelToDto(a));
-//        }
-
-        return articleDtos;
-    }
     @Transactional
     public ArticleUpdateDto update(ArticleUpdateDto articleUpdateDto) {
         var article = findById(articleUpdateDto.getId());
