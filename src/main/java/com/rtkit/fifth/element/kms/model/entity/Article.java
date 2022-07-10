@@ -65,7 +65,9 @@ public class Article {
     private Role roleAccess;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST,
+                    CascadeType.REFRESH})
     @ToString.Exclude
     private Namespace namespace;
 

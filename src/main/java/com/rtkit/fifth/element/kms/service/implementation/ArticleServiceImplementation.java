@@ -74,12 +74,9 @@ public class ArticleServiceImplementation implements ArticleService {
         ArticleSpecification appleSpecification = new ArticleSpecification();
         appleSpecification.add(searchCriteria);
 
-        List<ArticleDto> articleDtos = new ArrayList<>();
         List<Article> articles = articleRepo.findAll(appleSpecification);
 
-        for (Article a : articles) {
-            articleDtos.add(articleMapper.modelToDto(a));
-        }
+        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
 
         return articleDtos;
     }
