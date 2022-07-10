@@ -23,17 +23,17 @@ public class ArticleRestController {
         this.articleService = articleService;
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping
     public void addNewArticle(@RequestBody ArticleDto articleDto) {
         articleService.addNewArticle(articleDto);
     }
 
-    @PostMapping(value = "/search")
+    @GetMapping
     public List<ArticleDto> specification(@RequestBody List<ArticleSearchCriteria> searchCriteria) {
         return articleService.searchArticle(searchCriteria);
     }
 
-    @PostMapping(value = "/update")
+    @PutMapping
     public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
         return articleService.update(articleUpdateDto);
     }

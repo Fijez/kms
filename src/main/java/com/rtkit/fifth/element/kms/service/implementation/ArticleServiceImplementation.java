@@ -13,9 +13,12 @@ import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +49,6 @@ public class ArticleServiceImplementation implements ArticleService {
     @Override
     @Transactional
     public void addNewArticle(ArticleDto articleDto) {
-
         Article article = Article.builder()
                 .groups(null)
                 .users(null)
@@ -56,7 +58,7 @@ public class ArticleServiceImplementation implements ArticleService {
                 .content(articleDto.getContent())
                 .title(articleDto.getTitle())
                 .topic(articleDto.getTopic())
-                .versionDate(new Date())
+                .versionDate(LocalDateTime.now(ZoneId.systemDefault()))
                 .creator(userRepo.findByEmail(articleDto.getCreator()))
 //                .creator(articleDto.getCreator())
                 .roleAccess(Role.USER)
@@ -89,7 +91,7 @@ public class ArticleServiceImplementation implements ArticleService {
         var article = findById(articleUpdateDto.getId());
 
         article.setTitle(articleUpdateDto.getTitle());
-        article.setVersionDate(new Date());
+        article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
         article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
 
         if (articleUpdateDto.getContent() != null) {

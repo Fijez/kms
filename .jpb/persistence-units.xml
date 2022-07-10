@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit name="Default" defaultIncludeChangeLogFile="src/main/resources/db/changelog/2022/07/06-01-changelog.sql" defaultSearchScope="Project">
+      <persistence-unit name="Default" defaultIncludeChangeLogFile="src/main/resources/db/changelog/master-changelog.xml">
         <packages>
           <package value="com.rtkit.fifth.element.kms" />
         </packages>

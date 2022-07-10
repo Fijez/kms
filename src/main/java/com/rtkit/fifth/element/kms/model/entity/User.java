@@ -64,8 +64,6 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-    //TODO: разобраться, почему это должно быть реализовано здесь,
-    // а не на стороне клиента
     @Transient
     private String passwordConfirm;
 

@@ -2,11 +2,13 @@ package com.rtkit.fifth.element.kms.model.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -56,7 +58,8 @@ public class Article {
     private String topic;
 
     @Column
-    private Date versionDate;
+    @DateTimeFormat
+    private LocalDateTime versionDate;
 
     @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude

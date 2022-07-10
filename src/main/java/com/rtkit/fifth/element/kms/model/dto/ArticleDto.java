@@ -36,7 +36,7 @@ public class ArticleDto {
 
 //    private Set<Tag> tags;
 //
-//    private Set<NamespaceDto> namespaces;
+//    private NamespaceDto namespaces;
 //
 //    private Set<UserDto> users;
 //
