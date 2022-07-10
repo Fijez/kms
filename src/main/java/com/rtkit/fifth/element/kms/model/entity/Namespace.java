@@ -32,6 +32,8 @@ public class Namespace {
     @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "namespace",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE})
     private Set<Article> articles;
 }

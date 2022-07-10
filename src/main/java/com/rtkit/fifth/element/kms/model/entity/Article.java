@@ -65,12 +65,9 @@ public class Article {
     private Role roleAccess;
 
 
-    @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,
-                    CascadeType.REFRESH})
+    @ManyToOne
     @ToString.Exclude
-    private Set<Namespace> namespace;
+    private Namespace namespace;
 
     @ManyToMany(mappedBy = "articles",
             fetch = FetchType.LAZY,
