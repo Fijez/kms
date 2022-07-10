@@ -5,7 +5,8 @@ import com.rtkit.fifth.element.kms.model.entity.Group;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface GroupMapper extends ArticleMapper {
+public interface GroupMapper extends EntityMapper<
+        GroupDto, Group> {
 
     GroupDto modelToDto(Group group);
 }

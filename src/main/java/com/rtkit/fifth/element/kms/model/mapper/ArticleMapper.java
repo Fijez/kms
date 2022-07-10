@@ -10,9 +10,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ArticleMapper extends EntityMapper<ArticleDto, Article> {
 
-    @Mapping(source = "creator.name", target = "creator")
+    @Mapping(target = "article.creator.name")
     ArticleDto modelToDto(Article article);
 
-    @Mapping(source = "creator.name", target = "creator")
+    @Mapping(target = "article.creator.name")
     List<ArticleDto> modelToDto(List<Article> articles);
 }
