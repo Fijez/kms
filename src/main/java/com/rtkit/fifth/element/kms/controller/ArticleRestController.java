@@ -1,5 +1,6 @@
 package com.rtkit.fifth.element.kms.controller;
 
+import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
@@ -24,8 +25,8 @@ public class ArticleRestController {
     }
 
     @PostMapping
-    public void addNewArticle(@RequestBody ArticleDto articleDto) {
-        articleService.addNewArticle(articleDto);
+    public ArticleAddDto addNewArticle(@RequestBody ArticleAddDto articleAddDto) {
+        return articleService.addNewArticle(articleAddDto);
     }
 
     @GetMapping

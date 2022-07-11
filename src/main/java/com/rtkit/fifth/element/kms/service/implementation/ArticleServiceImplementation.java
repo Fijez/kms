@@ -1,5 +1,6 @@
 package com.rtkit.fifth.element.kms.service.implementation;
 
+import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
@@ -48,25 +49,22 @@ public class ArticleServiceImplementation implements ArticleService {
     // путем создания ArticleAddDto, или другим способом
     @Override
     @Transactional
-    public void addNewArticle(ArticleDto articleDto) {
+    public ArticleAddDto addNewArticle(ArticleAddDto articleAddDto) {
         Article article = Article.builder()
                 .groups(null)
                 .users(null)
                 .namespace(null)
                 .tags(null)
-                .id(articleDto.getId())
-                .content(articleDto.getContent())
-                .title(articleDto.getTitle())
-                .topic(articleDto.getTopic())
+                .content(articleAddDto.getContent())
+                .title(articleAddDto.getTitle())
+                .topic(articleAddDto.getTopic())
                 .versionDate(LocalDateTime.now(ZoneId.systemDefault()))
-                .creator(userRepo.findByEmail(articleDto.getCreator()))
-//                .creator(articleDto.getCreator())
+                .creator(userRepo.findByEmail(articleAddDto.getCreator()))
                 .roleAccess(Role.USER)
                 .build();
-
         articleRepo.save(article);
+        return new ArticleAddDto(article);
     }
-
     public Article findById(Long id) {
         return articleRepo.findById(id).orElseThrow(() -> new RuntimeException("Статья не найдена"));
     }
@@ -85,9 +83,9 @@ public class ArticleServiceImplementation implements ArticleService {
 
 
 
-
+    @Override
     @Transactional
-    public ArticleUpdateDto update(ArticleUpdateDto articleUpdateDto) {
+    public ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto) {
         var article = findById(articleUpdateDto.getId());
 
         article.setTitle(articleUpdateDto.getTitle());
