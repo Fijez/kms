@@ -9,6 +9,8 @@ import com.rtkit.fifth.element.kms.repository.*;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,14 +68,12 @@ public class ArticleServiceImplementation implements ArticleService {
     }
 
     @Override
-    public List<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
-            Optional<String> content, Optional<String[]> tags) {
+    public Page<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
+            Optional<String> content, Optional<String[]> tags, Pageable pageable) {
 
         ArticleSpec articleSpec = new ArticleSpec(creator, title, topic, content, tags);
-        List<Article> articles = articleRepo.findAll(articleSpec);
-        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
-
-        return articleDtos;
+        Page<Article> articles = articleRepo.findAll(articleSpec, pageable);
+        return articles.map(articleMapper::modelToDto);
     }
 
     @Override

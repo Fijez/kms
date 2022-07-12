@@ -1,7 +1,7 @@
 package com.rtkit.fifth.element.kms.repository;
 
 import com.rtkit.fifth.element.kms.model.entity.Article;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Data
+@AllArgsConstructor
 public class ArticleSpec implements Specification<Article> {
 
     private final Optional<String> creator;
@@ -26,26 +26,17 @@ public class ArticleSpec implements Specification<Article> {
         List<Predicate> predicates = new ArrayList<>();
         List<Predicate> tagPredicates = new ArrayList<>();
 
-        if (creator.isPresent() && !creator.get().isBlank()) {
-            predicates.add(builder.equal(root.get("creator"), creator.get()));
-        }
-        if (title.isPresent() && !title.get().isBlank()) {
-            predicates.add(builder.like(root.get("title"), title.get()));
-        }
-        if (topic.isPresent() && !topic.get().isBlank()) {
-            predicates.add(builder.like(root.get("topic"), topic.get()));
-        }
-        if (content.isPresent() && !content.get().isBlank()) {
-            predicates.add(builder.like(root.get("content"), ".*" + content.get() + ".*"));
-        }
-        if (tags.isPresent()) {
-            for (String tag : tags.get()
-            ) {
+        creator.filter(cr -> !cr.isBlank()).ifPresent(cr -> predicates.add(builder.equal(root.get("creator"), cr)));
+        title.filter(ti -> !ti.isBlank()).ifPresent(ti -> predicates.add(builder.like(root.get("title"), ti)));
+        topic.filter(to -> !to.isBlank()).ifPresent(to -> predicates.add(builder.like(root.get("topic"), to)));
+        content.filter(co -> !co.isBlank()).ifPresent(
+                co -> predicates.add(builder.equal(builder.function("fts", Boolean.class, root.get("content"), builder.literal(co)), true)));
+        tags.filter(ta -> (ta.length > 0)).ifPresent(ta -> {
+            for (String tag : ta) {
                 tagPredicates.add(builder.in(root.get("tags")).value(tag));
             }
             predicates.add(builder.or(tagPredicates.toArray(new Predicate[0])));
-        }
-
+        });
         return builder.and(predicates.toArray(new Predicate[0]));
     }
 }
