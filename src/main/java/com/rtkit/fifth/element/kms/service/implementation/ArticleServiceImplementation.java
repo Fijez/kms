@@ -15,8 +15,10 @@ import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -65,9 +67,6 @@ public class ArticleServiceImplementation implements ArticleService {
         articleRepo.save(article);
         return new ArticleAddDto(article);
     }
-    public Article findById(Long id) {
-        return articleRepo.findById(id).orElseThrow(() -> new RuntimeException("Статья не найдена"));
-    }
 
     @Override
     public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
@@ -86,8 +85,7 @@ public class ArticleServiceImplementation implements ArticleService {
     @Override
     @Transactional
     public ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto) {
-        var article = findById(articleUpdateDto.getId());
-
+        var article = articleRepo.findById(articleUpdateDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
         article.setTitle(articleUpdateDto.getTitle());
         article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
         article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
