@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ public class ArticleServiceImplementation implements ArticleService {
     private final ArticleRepo articleRepo;
     private final ArticleMapper articleMapper;
     private final GroupService groupService;
-
     private final UserRepo userRepo;
 
     @Autowired
@@ -51,7 +51,7 @@ public class ArticleServiceImplementation implements ArticleService {
     // путем создания ArticleAddDto, или другим способом
     @Override
     @Transactional
-    public ArticleAddDto addNewArticle(ArticleAddDto articleAddDto) {
+    public ArticleDto addNewArticle(ArticleAddDto articleAddDto) {
         Article article = Article.builder()
                 .groups(null)
                 .users(null)
@@ -65,7 +65,7 @@ public class ArticleServiceImplementation implements ArticleService {
                 .roleAccess(Role.USER)
                 .build();
         articleRepo.save(article);
-        return new ArticleAddDto(article);
+        return articleMapper.modelToDto(article);
     }
 
     @Override
@@ -84,8 +84,8 @@ public class ArticleServiceImplementation implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto) {
-        var article = articleRepo.findById(articleUpdateDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
+    public ArticleDto update ( ArticleUpdateDto articleUpdateDto) {
+        var article = articleRepo.findById(articleUpdateDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
         article.setTitle(articleUpdateDto.getTitle());
         article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
         article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
@@ -98,6 +98,6 @@ public class ArticleServiceImplementation implements ArticleService {
         }
 
         articleRepo.save(article);
-        return new ArticleUpdateDto(article);
+        return articleMapper.modelToDto(article);
     }
 }

@@ -1,14 +1,12 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
 import com.rtkit.fifth.element.kms.model.entity.Article;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

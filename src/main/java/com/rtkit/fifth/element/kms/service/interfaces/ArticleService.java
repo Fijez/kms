@@ -11,8 +11,8 @@ import java.util.List;
 
 public interface ArticleService {
 
-    ArticleAddDto addNewArticle(ArticleAddDto article);
+    ArticleDto addNewArticle(ArticleAddDto article);
 
     List <ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria);
-    ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto);
+    ArticleDto update ( ArticleUpdateDto articleUpdateDto);
 }

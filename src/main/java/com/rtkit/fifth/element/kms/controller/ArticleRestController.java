@@ -25,7 +25,7 @@ public class ArticleRestController {
     }
 
     @PostMapping
-    public ArticleAddDto addNewArticle(@RequestBody ArticleAddDto articleAddDto) {
+    public ArticleDto addNewArticle(@RequestBody ArticleAddDto articleAddDto) {
         return articleService.addNewArticle(articleAddDto);
     }
 
@@ -35,7 +35,7 @@ public class ArticleRestController {
     }
 
     @PutMapping
-    public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
+    public ArticleDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
         return articleService.update(articleUpdateDto);
     }
 }
