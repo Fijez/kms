@@ -1,5 +1,6 @@
 package com.rtkit.fifth.element.kms.service.interfaces;
 
+import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
@@ -10,8 +11,8 @@ import java.util.List;
 
 public interface ArticleService {
 
-    void addNewArticle(ArticleDto article);
+    ArticleDto addNewArticle(ArticleAddDto article);
 
     List <ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria);
-    ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto);
+    ArticleDto update ( ArticleUpdateDto articleUpdateDto);
 }
