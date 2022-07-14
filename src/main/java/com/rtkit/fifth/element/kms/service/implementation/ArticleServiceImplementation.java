@@ -2,18 +2,16 @@ package com.rtkit.fifth.element.kms.service.implementation;
 
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
-import com.rtkit.fifth.element.kms.model.dto.ArticleSearchDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.entity.Role;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
-import com.rtkit.fifth.element.kms.repository.ArticleRepo;
-import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
-import com.rtkit.fifth.element.kms.repository.ArticleSpecification;
-import com.rtkit.fifth.element.kms.repository.UserRepo;
+import com.rtkit.fifth.element.kms.repository.*;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,9 +21,8 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,12 +66,20 @@ public class ArticleServiceImplementation implements ArticleService {
     }
 
     @Override
+    public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
+            Optional<String> content, Optional<String[]> tags, Pageable pageable) {
+
+        ArticleSpec articleSpec = new ArticleSpec(creator, title, topic, content, tags);
+        Slice<Article> articles = articleRepo.findAll(articleSpec, pageable);
+        return articles.map(articleMapper::modelToDto);
+    }
+
+    @Override
     public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
-        ArticleSpecification appleSpecification = new ArticleSpecification();
-        appleSpecification.add(searchCriteria);
 
-        List<Article> articles = articleRepo.findAll(appleSpecification);
-
+        ArticleSpecification articleSpecification = new ArticleSpecification();
+        articleSpecification.add(searchCriteria);
+        List<Article> articles = articleRepo.findAll(articleSpecification);
         List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
 
         return articleDtos;
