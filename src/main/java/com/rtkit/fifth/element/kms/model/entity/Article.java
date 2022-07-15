@@ -27,7 +27,6 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Positive
-    @Column(name = "id")
     private Long id;
 
     @NotNull

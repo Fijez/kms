@@ -1,9 +1,6 @@
 package com.rtkit.fifth.element.kms.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -13,7 +10,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Builder
 @Entity
 @Table(name = "namespace", uniqueConstraints = @UniqueConstraint(columnNames = {"title"}))
 public class Namespace {

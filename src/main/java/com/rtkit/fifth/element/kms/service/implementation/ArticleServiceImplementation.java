@@ -66,6 +66,11 @@ public class ArticleServiceImplementation implements ArticleService {
     }
 
     @Override
+    public Optional<Article> findById(Long id){
+        return articleRepo.findById(id);
+    }
+
+    @Override
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
             Optional<String> content, Optional<String[]> tags, Pageable pageable) {
 

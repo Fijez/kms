@@ -28,7 +28,7 @@ public class ArticleRestController {
     private final ArticleService articleService;
 
     @Autowired
-    public ArticleRestController(ArticleServiceImplementation articleService) {
+    public ArticleRestController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
@@ -39,8 +39,12 @@ public class ArticleRestController {
     @Parameter(name = "content", in = ParameterIn.QUERY, content = @Content(schema = @Schema(type = "string")), description = "Текст")
     @Parameter(name = "tags", in = ParameterIn.QUERY, content = @Content(schema = @Schema(type = "string[]")), description = "Тэги")
     @Operation(summary = "Поиск по статьям с фильтром")
-    public ResponseEntity<Slice<ArticleDto>> search(@RequestParam Optional<String> creator, @RequestParam Optional<String> title,
-            @RequestParam Optional<String> topic, @RequestParam Optional<String> content, @RequestParam Optional<String[]> tags, @PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Slice<ArticleDto>> search(@RequestParam Optional<String> creator,
+                                                    @RequestParam Optional<String> title,
+                                                    @RequestParam Optional<String> topic,
+                                                    @RequestParam Optional<String> content,
+                                                    @RequestParam Optional<String[]> tags,
+                                                    @PageableDefault(size = 5) Pageable pageable) {
         return ResponseEntity.ok(articleService.searchArticles(creator, title, topic, content, tags, pageable));
     }
 
@@ -49,13 +53,9 @@ public class ArticleRestController {
         return articleService.addNewArticle(articleAddDto);
     }
 
-    //    @GetMapping
-    public List<ArticleDto> specification(@RequestBody List<ArticleSearchCriteria> searchCriteria) {
-        return articleService.searchArticle(searchCriteria);
-    }
-
     @PutMapping
     public ArticleDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
+        //
         return articleService.update(articleUpdateDto);
     }
 }

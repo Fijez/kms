@@ -1,9 +1,10 @@
 package com.rtkit.fifth.element.kms.service.implementation;
 
+import com.rtkit.fifth.element.kms.model.dto.UserDto;
+import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
 import com.rtkit.fifth.element.kms.model.entity.Role;
 import com.rtkit.fifth.element.kms.model.entity.User;
 import com.rtkit.fifth.element.kms.model.mapper.UserMapper;
-import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
 import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,29 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private EntityManager em;
     private final UserRepo userRepo;
     private final UserMapper userMapper;
-    BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImplementation(UserRepo userRepo, UserMapper userMapper,
-            BCryptPasswordEncoder passwordEncoder) {
+                                     BCryptPasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    @Override
+    public UserDto map(User user) {
+        return userMapper.modelToDto(user);
+    }
+
+    @Override
+    public List<UserDto> map(List<User> users) {
+        return userMapper.modelToDto(users);
     }
 
     @Override
@@ -55,6 +71,11 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
+    public User findUserByMail(String login) {
+        return userRepo.findByEmail(login);
+    }
+
+    @Override
     public List<User> allUsers() {
         return userRepo.findAll();
     }
@@ -68,15 +89,14 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
             return false;
         }
 
-        User user = User.builder()
-                .email(registrationInfo.getEmail())
-                .name(registrationInfo.getName())
-                .password(registrationInfo.getPassword())
-                .build();
+        userRepo.save(
+                User.builder()
+                        .email(registrationInfo.getEmail())
+                        .name(registrationInfo.getName())
+                        .password(passwordEncoder.encode(registrationInfo.getPassword()))
+                        .role(Role.USER)
+                        .build());
 
-        user.setRole(Role.USER);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepo.save(user);
         return true;
     }
 
