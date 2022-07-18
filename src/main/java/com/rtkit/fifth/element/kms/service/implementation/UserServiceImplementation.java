@@ -70,10 +70,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         Set<String> authorities = new HashSet<>();
         authorities.add(user.getRole().getName());
 
-        user.getGroups().forEach(group -> group.getArticles().forEach(articleGroup -> authorities.add(articleGroup.getGroupRole().getAuthority().toUpperCase() + articleGroup.getArticle().getTitle().toUpperCase())));
-        user.getNamespaces().forEach(namespace -> namespace.getArticles().forEach(article -> authorities.add("REDACTOR" + article.getTitle().toUpperCase())));
-        user.getArticles().forEach(articleUser -> authorities.add("REDACTOR" + articleUser.getArticle().getTitle().toUpperCase()));
-        user.getCreatedArticles().forEach(article -> authorities.add("REDACTOR" + article.getTitle().toUpperCase()));
+        user.getGroups().forEach(group -> group.getArticles().forEach(articleGroup -> authorities.add(articleGroup.getGroupRole().getAuthority().toUpperCase() + "_" + articleGroup.getArticle().getTitle().toUpperCase())));
+        user.getNamespaces().forEach(namespace -> namespace.getArticles().forEach(article -> authorities.add(namespace.getTitle().toUpperCase() + "_" + article.getTitle().toUpperCase())));
+        user.getArticles().forEach(articleUser -> authorities.add(articleUser.getUserRole().getAuthority().toUpperCase() + "_" + articleUser.getArticle().getTitle().toUpperCase()));
 
         return authorities;
     }
