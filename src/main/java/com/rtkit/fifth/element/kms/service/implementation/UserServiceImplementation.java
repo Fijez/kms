@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -68,24 +69,12 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     public Collection<String> provideAuthorities(User user) {
         Set<String> authorities = new HashSet<>();
         authorities.add(user.getRole().getName());
-        for (Group group : user.getGroups()
-        ) {
-            for (ArticleGroup articleGroup : group.getArticles()) {
-                authorities.add("REDACTOR" + articleGroup.getArticle().getId());
-            }
-        }
-        for (Namespace namespace : user.getNamespaces()
-        ) {
-            for (Article article : namespace.getArticles()) {
-                authorities.add("REDACTOR" + article.getId());
-            }
-        }
-        for (ArticleUser articleUser : user.getArticles()) {
-            authorities.add("REDACTOR" + articleUser.getArticle().getId());
-        }
-        for (Article article : user.getCreatedArticles()) {
-            authorities.add("REDACTOR" + article.getId());
-        }
+
+        user.getGroups().forEach(group -> group.getArticles().forEach(articleGroup -> authorities.add(articleGroup.getGroupRole().getAuthority().toUpperCase() + articleGroup.getArticle().getTitle().toUpperCase())));
+        user.getNamespaces().forEach(namespace -> namespace.getArticles().forEach(article -> authorities.add("REDACTOR" + article.getTitle().toUpperCase())));
+        user.getArticles().forEach(articleUser -> authorities.add("REDACTOR" + articleUser.getArticle().getTitle().toUpperCase()));
+        user.getCreatedArticles().forEach(article -> authorities.add("REDACTOR" + article.getTitle().toUpperCase()));
+
         return authorities;
     }
 
