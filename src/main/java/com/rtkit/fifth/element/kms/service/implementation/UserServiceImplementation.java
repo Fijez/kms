@@ -2,10 +2,10 @@ package com.rtkit.fifth.element.kms.service.implementation;
 
 import com.rtkit.fifth.element.kms.model.dto.UserDto;
 import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
-import com.rtkit.fifth.element.kms.model.entity.Role;
-import com.rtkit.fifth.element.kms.model.entity.User;
+import com.rtkit.fifth.element.kms.model.entity.*;
 import com.rtkit.fifth.element.kms.model.mapper.UserMapper;
 import com.rtkit.fifth.element.kms.repository.UserRepo;
+import com.rtkit.fifth.element.kms.service.MyUserDetails;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,7 +31,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 
     @Autowired
     public UserServiceImplementation(UserRepo userRepo, UserMapper userMapper,
-                                     BCryptPasswordEncoder passwordEncoder) {
+            BCryptPasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
@@ -56,12 +55,26 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email);
+        Set<String> authorities = new HashSet<>();
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
 
-        return user;
+        for (Group group : user.getGroups()
+        ) {
+            for (ArticleGroup articleGroup : group.getArticles()) {
+                authorities.add("REDACTOR" + articleGroup.getArticle().getId());
+            }
+        }
+        for (Namespace namespace : user.getNamespaces()
+        ) {
+            for (Article article : namespace.getArticles()) {
+                authorities.add("REDACTOR" + article.getId());
+            }
+        }
+
+        return new MyUserDetails(user, authorities);
     }
 
     @Override
