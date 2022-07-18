@@ -8,6 +8,7 @@ import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.MyUserDetails;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -63,9 +64,10 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         return new MyUserDetails(user, this);
     }
 
-    public Collection<String> provideAuthorities(User user){
+    @Override
+    public Collection<String> provideAuthorities(User user) {
         Set<String> authorities = new HashSet<>();
-
+        authorities.add(user.getRole().getName());
         for (Group group : user.getGroups()
         ) {
             for (ArticleGroup articleGroup : group.getArticles()) {
@@ -78,7 +80,13 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
                 authorities.add("REDACTOR" + article.getId());
             }
         }
-        return  authorities;
+        for (ArticleUser articleUser : user.getArticles()) {
+            authorities.add("REDACTOR" + articleUser.getArticle().getId());
+        }
+        for (Article article : user.getCreatedArticles()) {
+            authorities.add("REDACTOR" + article.getId());
+        }
+        return authorities;
     }
 
     @Override
