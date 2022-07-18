@@ -1,6 +1,7 @@
 package com.rtkit.fifth.element.kms.service;
 
 import com.rtkit.fifth.element.kms.model.entity.User;
+import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,12 +14,12 @@ import java.util.List;
 @Getter
 public class MyUserDetails implements UserDetails {
 
-    private User user;
-    private List<String> authorities;
+    private final User user;
+    private final transient UserService userService;
 
-    public MyUserDetails(User user, Collection<String> authorities) {
+    public MyUserDetails(User user, UserService userService) {
         this.user = user;
-        this.authorities = new ArrayList<>(authorities);
+        this.userService = userService;
     }
 
     @Override
@@ -26,8 +27,8 @@ public class MyUserDetails implements UserDetails {
         List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
 
-        for (String authority: authorities
-             ) {
+        for (String authority : userService.provideAuthorities(user)
+        ) {
             grantedAuthorities.add(new SimpleGrantedAuthority(authority));
         }
 

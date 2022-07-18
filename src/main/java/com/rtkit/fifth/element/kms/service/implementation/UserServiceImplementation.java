@@ -55,11 +55,16 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findByEmail(email);
-        Set<String> authorities = new HashSet<>();
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+
+        return new MyUserDetails(user, this);
+    }
+
+    public Collection<String> provideAuthorities(User user){
+        Set<String> authorities = new HashSet<>();
 
         for (Group group : user.getGroups()
         ) {
@@ -73,8 +78,7 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
                 authorities.add("REDACTOR" + article.getId());
             }
         }
-
-        return new MyUserDetails(user, authorities);
+        return  authorities;
     }
 
     @Override
