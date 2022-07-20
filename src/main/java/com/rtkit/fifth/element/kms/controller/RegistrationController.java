@@ -24,7 +24,6 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-    // TODO: проверить работоспособность
     @GetMapping("/registration")
     public ModelAndView registration(Model model) {
         model.addAttribute("userForm", new User());
@@ -32,6 +31,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
+    //TODO: дать возможность регистрировать пользователь только администраторам
     public String addUser(@ModelAttribute("userForm") UserRegistrationInfo userForm, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {

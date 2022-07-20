@@ -2,13 +2,13 @@ package com.rtkit.fifth.element.kms.service.implementation;
 
 import com.rtkit.fifth.element.kms.model.dto.UserDto;
 import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
-import com.rtkit.fifth.element.kms.model.entity.*;
+import com.rtkit.fifth.element.kms.model.entity.Role;
+import com.rtkit.fifth.element.kms.model.entity.User;
 import com.rtkit.fifth.element.kms.model.mapper.UserMapper;
 import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.MyUserDetails;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,11 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,12 +38,14 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 //        admin.setRole(Role.ADMIN);
 //        String adminPass = passwordEncoder.encode("admin");
 //        admin.setPassword(adminPass);
-//        userRepo.save(admin);
+//        if (!admin.equals(userRepo.findByEmail("admin@mail.ru"))) {
+//            userRepo.save(admin);
+//        }
 //    }
 
     @Autowired
     public UserServiceImplementation(UserRepo userRepo, UserMapper userMapper,
-            BCryptPasswordEncoder passwordEncoder) {
+                                     BCryptPasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;

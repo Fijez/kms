@@ -8,9 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -23,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 
 @Entity(name = "article")
-public class Article implements Serializable {
+public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
