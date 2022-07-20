@@ -30,18 +30,18 @@ public class Article {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @ToString.Exclude
     private User creator;
 
     @OneToMany(mappedBy = "article",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
     @ToString.Exclude
     private Set<ArticleUser> users;
 
     @OneToMany(mappedBy = "article",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
     @ToString.Exclude
     private List<ArticleGroup> groups;
@@ -60,21 +60,21 @@ public class Article {
     @DateTimeFormat
     private LocalDateTime versionDate;
 
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.EAGER)
     @ToString.Exclude
     private String content;
 
     private Role roleAccess;
 
 
-    @ManyToOne(fetch = FetchType.LAZY,
+    @ManyToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST,
                     CascadeType.REFRESH})
     @ToString.Exclude
     private Namespace namespace;
 
     @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST})
     @ToString.Exclude
     private Set<Tag> tags;

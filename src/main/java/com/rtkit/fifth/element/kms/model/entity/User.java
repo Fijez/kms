@@ -28,22 +28,22 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy = "creator",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE})
     private Set<Article> createdArticles;
 
     @OneToMany(mappedBy = "creator",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE})
     private Set<Namespace> createdNamespaces;
 
     @ManyToMany(mappedBy = "users",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Group> groups;
 
     @OneToMany(mappedBy = "user",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
     private Set<ArticleUser> articles;
 
@@ -69,7 +69,7 @@ public class User {
     private Role role;
 
     @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
     private Set<Namespace> Namespaces;
 }

@@ -35,6 +35,6 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<ArticleGroup> articles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> users;
 }

@@ -20,12 +20,12 @@ public class ArticleGroup {
 
     private Role groupRole;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId(value = "articleId")
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId(value = "groupId")
     @JoinColumn(name = "group_id")
     private Group group;

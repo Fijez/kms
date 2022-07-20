@@ -15,7 +15,7 @@ public interface ArticleService {
 
     ArticleDto addNewArticle(ArticleAddDto article);
 
-    List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria);
+//    List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria);
 
     Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
             Optional<String> content, Optional<String[]> tags, Pageable pageable);

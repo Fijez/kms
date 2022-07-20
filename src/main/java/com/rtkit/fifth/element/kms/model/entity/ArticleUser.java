@@ -20,12 +20,12 @@ public class ArticleUser {
 
     private Role userRole;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId(value = "articleId")
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId(value = "userId")
     @JoinColumn(name = "user_id")
     private User user;

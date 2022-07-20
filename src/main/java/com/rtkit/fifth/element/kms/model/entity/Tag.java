@@ -20,7 +20,7 @@ public class Tag {
     @Id
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
     cascade = {CascadeType.REFRESH})
     private List<Article> articles;
 }

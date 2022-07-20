@@ -22,15 +22,15 @@ public class Namespace {
     @Column
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.REFRESH})
     private Set<User> users;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User creator;
 
     @OneToMany(mappedBy = "namespace",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = {CascadeType.MERGE})
     private Set<Article> articles;
 }

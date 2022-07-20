@@ -79,16 +79,16 @@ public class ArticleServiceImplementation implements ArticleService {
         return articles.map(articleMapper::modelToDto);
     }
 
-    @Override
-    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
-
-        ArticleSpecification articleSpecification = new ArticleSpecification();
-        articleSpecification.add(searchCriteria);
-        List<Article> articles = articleRepo.findAll(articleSpecification);
-        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
-
-        return articleDtos;
-    }
+//    @Override
+//    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
+//
+//        ArticleSpecification articleSpecification = new ArticleSpecification();
+//        articleSpecification.add(searchCriteria);
+//        List<Article> articles = articleRepo.findAll(articleSpecification);
+//        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
+//
+//        return articleDtos;
+//    }
 
 
 
