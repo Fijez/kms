@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.util.Set;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "namespace", uniqueConstraints = @UniqueConstraint(columnNames = {"title"}))
-public class Namespace {
+public class Namespace implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Min(0)
@@ -22,15 +23,15 @@ public class Namespace {
     @Column
     private String title;
 
-    @ManyToMany(fetch = FetchType.EAGER,
+    @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     private Set<User> users;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
     @OneToMany(mappedBy = "namespace",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE})
     private Set<Article> articles;
 }

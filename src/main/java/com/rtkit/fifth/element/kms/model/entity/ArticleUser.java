@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "articles_users")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleUser {
+public class ArticleUser implements Serializable {
 
 
     @EmbeddedId
@@ -20,12 +21,12 @@ public class ArticleUser {
 
     private Role userRole;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId(value = "articleId")
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId(value = "userId")
     @JoinColumn(name = "user_id")
     private User user;

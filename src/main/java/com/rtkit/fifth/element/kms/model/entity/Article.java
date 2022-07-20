@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 
 @Entity(name = "article")
-public class Article {
+public class Article implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,18 +31,18 @@ public class Article {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private User creator;
 
     @OneToMany(mappedBy = "article",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     @ToString.Exclude
     private Set<ArticleUser> users;
 
     @OneToMany(mappedBy = "article",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     @ToString.Exclude
     private List<ArticleGroup> groups;
@@ -60,21 +61,21 @@ public class Article {
     @DateTimeFormat
     private LocalDateTime versionDate;
 
-    @Basic(fetch = FetchType.EAGER)
+    @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
     private String content;
 
     private Role roleAccess;
 
 
-    @ManyToOne(fetch = FetchType.EAGER,
+    @ManyToOne(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST,
                     CascadeType.REFRESH})
     @ToString.Exclude
     private Namespace namespace;
 
     @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST})
     @ToString.Exclude
     private Set<Tag> tags;

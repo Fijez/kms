@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.*;
 
 @Getter
@@ -20,7 +21,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,22 +29,22 @@ public class User {
     private Long id;
 
     @OneToMany(mappedBy = "creator",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE})
     private Set<Article> createdArticles;
 
     @OneToMany(mappedBy = "creator",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE})
     private Set<Namespace> createdNamespaces;
 
     @ManyToMany(mappedBy = "users",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Group> groups;
 
     @OneToMany(mappedBy = "user",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     private Set<ArticleUser> articles;
 
@@ -69,7 +70,7 @@ public class User {
     private Role role;
 
     @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     private Set<Namespace> Namespaces;
 }
