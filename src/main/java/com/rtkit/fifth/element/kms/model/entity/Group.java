@@ -1,10 +1,7 @@
 package com.rtkit.fifth.element.kms.model.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -14,6 +11,8 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -22,17 +21,18 @@ public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Min(0)
     private Long id;
 
-    @NotBlank
     @Column
     private String title;
 
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    @ToString.Exclude
     private List<ArticleGroup> articles;
 
     @ManyToMany(fetch = FetchType.LAZY)

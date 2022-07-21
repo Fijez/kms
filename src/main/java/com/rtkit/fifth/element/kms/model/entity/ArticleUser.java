@@ -29,4 +29,6 @@ public class ArticleUser {
     @MapsId(value = "userId")
     @JoinColumn(name = "user_id")
     private User user;
+
+
 }

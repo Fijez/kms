@@ -20,7 +20,6 @@ public interface ArticleService {
     Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
             Optional<String> content, Optional<String[]> tags, Pageable pageable);
 
-    ArticleDto update ( ArticleUpdateDto articleUpdateDto);
+    ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto);
 
-    Optional<Article> findById(Long id);
 }

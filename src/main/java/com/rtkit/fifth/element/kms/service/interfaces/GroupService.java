@@ -5,7 +5,6 @@ import com.rtkit.fifth.element.kms.model.entity.Group;
 
 public interface GroupService {
 
-    Group getGroup(String title);
-
-    GroupDto getGroupDto(String title);
+ Group groupAdd (GroupDto groupDto);
+ GroupDto groupUpdate (GroupDto groupDto);
 }

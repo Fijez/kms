@@ -3,8 +3,7 @@ package com.rtkit.fifth.element.kms.service.implementation;
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
-import com.rtkit.fifth.element.kms.model.entity.Article;
-import com.rtkit.fifth.element.kms.model.entity.Role;
+import com.rtkit.fifth.element.kms.model.entity.*;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.repository.*;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
@@ -12,17 +11,15 @@ import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,16 +29,22 @@ public class ArticleServiceImplementation implements ArticleService {
     private final ArticleMapper articleMapper;
     private final GroupService groupService;
     private final UserRepo userRepo;
+    private final ArticleUserRepo articleUserRepo;
+    private final TagRepo tagRepo;
+    private final NamespaceRepo namespaceRepo;
 
     @Autowired
     public ArticleServiceImplementation(ArticleRepo articleRepo
             , ArticleMapper articleMapper
             , GroupService groupService
-            , UserRepo userRepo) {
+            , UserRepo userRepo, ArticleUserRepo articleUserRepo, TagRepo tagRepo, NamespaceRepo namespaceRepo) {
         this.articleRepo = articleRepo;
         this.articleMapper = articleMapper;
         this.groupService = groupService;
         this.userRepo = userRepo;
+        this.articleUserRepo = articleUserRepo;
+        this.tagRepo = tagRepo;
+        this.namespaceRepo = namespaceRepo;
     }
 
     //TODO: реализовать добавление полей которые сейчас null, или убрать их
@@ -65,10 +68,6 @@ public class ArticleServiceImplementation implements ArticleService {
         return articleMapper.modelToDto(article);
     }
 
-    @Override
-    public Optional<Article> findById(Long id){
-        return articleRepo.findById(id);
-    }
 
     @Override
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
@@ -94,20 +93,28 @@ public class ArticleServiceImplementation implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleDto update ( ArticleUpdateDto articleUpdateDto) {
-        var article = articleRepo.findById(articleUpdateDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-        article.setTitle(articleUpdateDto.getTitle());
-        article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
-        article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
-
-        if (articleUpdateDto.getContent() != null) {
-            article.setContent(articleUpdateDto.getContent());
+    public ArticleUpdateDto update ( ArticleUpdateDto articleDto) {
+        var article = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        article.setTitle(articleDto.getTitle());
+        article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
+        if (articleDto.getContent() != null) {
+            article.setContent(articleDto.getContent());
+            article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
         }
-        if (articleUpdateDto.getTopic() != null) {
-            article.setTopic(articleUpdateDto.getTopic());
+        if (articleDto.getTopic() != null) {
+            article.setTopic(articleDto.getTopic());
         }
-
+        Set<ArticleUser> users = article.getUsers();
+        articleDto.getUsers().forEach(x -> users.add(new ArticleUser(new ArticleUserId(article.getId(),x),Role.USER, article,userRepo.findById(x).orElseThrow(()-> new EntityNotFoundException("bad request")))));
+        articleDto.getUsers().forEach(x -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(),x),Role.USER, article,userRepo.findById(x).orElseThrow(()-> new EntityNotFoundException("bad request"))))));
+        article.setUsers(users);
+        Set<Tag> tags = article.getTags();
+        articleDto.getTags().forEach(x-> tags.add(tagRepo.findByTitle(x)));
+        article.setTags(tags);
+        article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
+        if (articleDto.getNamespaceId() != null )
+        article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(()-> new EntityNotFoundException("bad request")));
         articleRepo.save(article);
-        return articleMapper.modelToDto(article);
+        return articleDto;
     }
 }
