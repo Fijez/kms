@@ -22,4 +22,5 @@ public interface ArticleService {
 
     ArticleUpdateDto update ( ArticleUpdateDto articleUpdateDto);
 
+    Optional<Article> findById(Long id);
 }

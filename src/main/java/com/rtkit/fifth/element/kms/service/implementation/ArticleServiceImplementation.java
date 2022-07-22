@@ -55,7 +55,7 @@ public class ArticleServiceImplementation implements ArticleService {
         Article article = Article.builder()
                 .groups(null)
                 .users(null)
-                .namespace(null)
+                .namespace(null)//TODO: сделать дефолтный
                 .tags(null)
                 .content(articleAddDto.getContent())
                 .title(articleAddDto.getTitle())
@@ -109,13 +109,18 @@ public class ArticleServiceImplementation implements ArticleService {
         articleDto.getUsers().forEach(user -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(),user),Role.USER, article,userRepo.findById(user).orElseThrow(()-> new EntityNotFoundException("bad request"))))));
         article.setUsers(users);
         Set<Tag> tags = article.getTags();
-        articleDto.getTags().forEach(x-> tags.add(tagRepo.findById(x).orElseThrow(()-> new EntityNotFoundException("bad request"))));
+        articleDto.getTags().forEach(tag -> tags.add(tagRepo.findById(tag).orElseThrow(() -> new EntityNotFoundException("bad request"))));
         article.setTags(tags);
         article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
-        if (articleDto.getNamespaceId() != null )
-        article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(()-> new EntityNotFoundException("bad request")));
+        if (articleDto.getNamespaceId() != null)
+            article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")));
         articleRepo.save(article);
-        article.getTags().forEach(x-> System.out.println(x.getTitle()));
         return articleDto;
+    }
+
+    @Override
+    //TODO: реализовать
+    public Optional<Article> findById(Long id) {
+        return Optional.empty();
     }
 }
