@@ -1,5 +1,6 @@
 package com.rtkit.fifth.element.kms.controller;
 
+import com.rtkit.fifth.element.kms.model.dto.TagDto;
 import com.rtkit.fifth.element.kms.service.interfaces.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class TagController {
     }
 
     @PostMapping
-    public String addNewTag(@RequestBody String name) {
-        return tagService.addNewTag(name);
+    public String addNewTag(@RequestBody TagDto tagDto) {
+        return tagService.addNewTag(tagDto);
     }
 }

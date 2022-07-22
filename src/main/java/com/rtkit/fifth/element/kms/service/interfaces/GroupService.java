@@ -1,10 +1,10 @@
 package com.rtkit.fifth.element.kms.service.interfaces;
 
 import com.rtkit.fifth.element.kms.model.dto.GroupDto;
-import com.rtkit.fifth.element.kms.model.entity.Group;
+import com.rtkit.fifth.element.kms.model.dto.GroupUpdateDto;
 
 public interface GroupService {
 
- Group groupAdd (GroupDto groupDto);
- GroupDto groupUpdate (GroupDto groupDto);
+ GroupDto groupAdd (GroupDto groupDto);
+ GroupUpdateDto groupUpdate (GroupUpdateDto groupDto);
 }

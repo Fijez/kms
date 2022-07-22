@@ -1,25 +1,27 @@
 package com.rtkit.fifth.element.kms.model.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@Builder
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tag")
 public class Tag {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-    cascade = {CascadeType.REFRESH})
-    private List<Article> articles;
 }

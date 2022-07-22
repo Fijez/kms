@@ -73,10 +73,15 @@ public class Article {
     @ToString.Exclude
     private Namespace namespace;
 
-    @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST})
-    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "tag_articles",
+            joinColumns = @JoinColumn(name = "articles_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
     @Override
@@ -90,5 +95,13 @@ public class Article {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void addTag (Tag tag){
+        tags.add(tag);
+    }
+
+    public void removeTag (Tag tag){
+        tags.remove(tag);
     }
 }

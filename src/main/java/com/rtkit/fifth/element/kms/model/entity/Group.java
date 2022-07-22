@@ -4,8 +4,6 @@ package com.rtkit.fifth.element.kms.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity(name = "group")
+@Entity
+@Table(name = "groups")
 public class Group {
 
     @Id
@@ -33,8 +32,16 @@ public class Group {
             fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     @ToString.Exclude
-    private List<ArticleGroup> articles;
+    private Set<ArticleGroup> articles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
 }

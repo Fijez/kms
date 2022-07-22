@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ArticleServiceImplementation implements ArticleService {
 
     private final ArticleRepo articleRepo;
@@ -105,16 +105,17 @@ public class ArticleServiceImplementation implements ArticleService {
             article.setTopic(articleDto.getTopic());
         }
         Set<ArticleUser> users = article.getUsers();
-        articleDto.getUsers().forEach(x -> users.add(new ArticleUser(new ArticleUserId(article.getId(),x),Role.USER, article,userRepo.findById(x).orElseThrow(()-> new EntityNotFoundException("bad request")))));
-        articleDto.getUsers().forEach(x -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(),x),Role.USER, article,userRepo.findById(x).orElseThrow(()-> new EntityNotFoundException("bad request"))))));
+        articleDto.getUsers().forEach(user -> users.add(new ArticleUser(new ArticleUserId(article.getId(),user),Role.USER, article,userRepo.findById(user).orElseThrow(()-> new EntityNotFoundException("bad request")))));
+        articleDto.getUsers().forEach(user -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(),user),Role.USER, article,userRepo.findById(user).orElseThrow(()-> new EntityNotFoundException("bad request"))))));
         article.setUsers(users);
         Set<Tag> tags = article.getTags();
-        articleDto.getTags().forEach(x-> tags.add(tagRepo.findByTitle(x)));
+        articleDto.getTags().forEach(x-> tags.add(tagRepo.findById(x).orElseThrow(()-> new EntityNotFoundException("bad request"))));
         article.setTags(tags);
         article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
         if (articleDto.getNamespaceId() != null )
         article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(()-> new EntityNotFoundException("bad request")));
         articleRepo.save(article);
+        article.getTags().forEach(x-> System.out.println(x.getTitle()));
         return articleDto;
     }
 }

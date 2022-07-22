@@ -21,7 +21,7 @@ public class ArticleUpdateDto {
     private String topic;
     private String content;
     private String creator;
-    private List<String> tags;
+    private List<Long> tags;
     private String roleAccess;
     private List<Long> users;
     private Long namespaceId;

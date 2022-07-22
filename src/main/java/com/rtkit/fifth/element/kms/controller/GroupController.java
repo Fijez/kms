@@ -1,7 +1,7 @@
 package com.rtkit.fifth.element.kms.controller;
 
 import com.rtkit.fifth.element.kms.model.dto.GroupDto;
-import com.rtkit.fifth.element.kms.model.entity.Group;
+import com.rtkit.fifth.element.kms.model.dto.GroupUpdateDto;
 import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +15,11 @@ public class GroupController {
     }
 
     @PostMapping
-    public Group groupAdd(@RequestBody GroupDto groupDto){
+    public GroupDto groupAdd(@RequestBody GroupDto groupDto){
         return groupService.groupAdd(groupDto);
     }
     @PutMapping
-    public GroupDto groupUpdate(@RequestBody GroupDto groupDto){
+    public GroupUpdateDto groupUpdate(@RequestBody GroupUpdateDto groupDto){
         return groupService.groupUpdate(groupDto);
     }
 }
