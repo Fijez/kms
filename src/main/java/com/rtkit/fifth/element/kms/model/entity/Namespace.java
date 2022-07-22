@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.util.Set;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "namespace", uniqueConstraints = @UniqueConstraint(columnNames = {"title"}))
-public class Namespace {
+public class Namespace implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Min(0)

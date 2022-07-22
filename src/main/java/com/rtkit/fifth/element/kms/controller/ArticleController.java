@@ -3,8 +3,6 @@ package com.rtkit.fifth.element.kms.controller;
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
-import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
-import com.rtkit.fifth.element.kms.service.implementation.ArticleServiceImplementation;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,17 +16,16 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/article")
-public class ArticleRestController {
+public class ArticleController {
 
     private final ArticleService articleService;
 
     @Autowired
-    public ArticleRestController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
@@ -39,6 +36,7 @@ public class ArticleRestController {
     @Parameter(name = "content", in = ParameterIn.QUERY, content = @Content(schema = @Schema(type = "string")), description = "Текст")
     @Parameter(name = "tags", in = ParameterIn.QUERY, content = @Content(schema = @Schema(type = "string[]")), description = "Тэги")
     @Operation(summary = "Поиск по статьям с фильтром")
+    //TODO: добавить ограничение, чтобы были видны только доступные статьи
     public ResponseEntity<Slice<ArticleDto>> search(@RequestParam Optional<String> creator,
                                                     @RequestParam Optional<String> title,
                                                     @RequestParam Optional<String> topic,

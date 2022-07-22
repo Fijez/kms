@@ -18,7 +18,10 @@ public class ArticleAddDto {
     private LocalDate versionDate;
     private String content;
 
+    private String namespace;
+
     public ArticleAddDto(Article article) {
+        this.namespace = article.getNamespace().getTitle();
         this.title = article.getTitle();
         this.topic = article.getTopic();
         this.content = article.getContent();

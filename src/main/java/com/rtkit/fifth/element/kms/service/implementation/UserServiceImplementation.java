@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
+
 public class UserServiceImplementation implements UserService, UserDetailsService {
 
     @PersistenceContext
@@ -30,6 +32,16 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private final UserRepo userRepo;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+
+//    @PostConstruct
+//    public void init(){
+//        User admin = new User();
+//        admin.setEmail("admin@mail.ru");
+//        admin.setRole(Role.ADMIN);
+//        String adminPass = passwordEncoder.encode("admin");
+//        admin.setPassword(adminPass);
+//        userRepo.save(admin);
+//    }
 
     @Autowired
     public UserServiceImplementation(UserRepo userRepo, UserMapper userMapper,

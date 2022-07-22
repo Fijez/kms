@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "articles_groups")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleGroup {
+public class ArticleGroup implements Serializable {
 
 
     @EmbeddedId
