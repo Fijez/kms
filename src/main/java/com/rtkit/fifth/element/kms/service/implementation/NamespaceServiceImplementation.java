@@ -37,4 +37,10 @@ public class NamespaceServiceImplementation implements NamespaceService {
         namespaceRepo.save(namespace);
         return namespaceMapper.modelToDto(namespace);
     }
+
+    @Override
+    //TODO: возвращать DTO
+    public Namespace getByTitle(String title) {
+        return namespaceRepo.getByTitle(title);
+    }
 }

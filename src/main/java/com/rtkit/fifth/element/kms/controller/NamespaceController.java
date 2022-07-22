@@ -20,7 +20,7 @@ public class NamespaceController {
         this.namespaceService = namespaceService;
     }
 
-    //TODO: открыть доступ только администратору
+    //TODO: РѕС‚РєСЂС‹С‚СЊ РґРѕСЃС‚СѓРї С‚РѕР»СЊРєРѕ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ
     @PostMapping
     public NamespaceDto addNewNamespace(@RequestBody NamespaceDto namespaceDto, Authentication authentication) {
         return namespaceService.addNewNamespace(namespaceDto);
