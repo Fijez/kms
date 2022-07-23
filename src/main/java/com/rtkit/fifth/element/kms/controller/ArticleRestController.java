@@ -3,8 +3,6 @@ package com.rtkit.fifth.element.kms.controller;
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
-import com.rtkit.fifth.element.kms.repository.ArticleSearchCriteria;
-import com.rtkit.fifth.element.kms.service.implementation.ArticleServiceImplementation;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,9 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -44,8 +42,9 @@ public class ArticleRestController {
                                                     @RequestParam Optional<String> topic,
                                                     @RequestParam Optional<String> content,
                                                     @RequestParam Optional<String[]> tags,
-                                                    @PageableDefault(size = 5) Pageable pageable) {
-        return ResponseEntity.ok(articleService.searchArticles(creator, title, topic, content, tags, pageable));
+                                                    @PageableDefault(size = 5) Pageable pageable,
+                                                    Authentication authentication) {
+        return ResponseEntity.ok(articleService.searchArticles(creator, title, topic, content, tags, pageable, authentication));
     }
 
     @PostMapping
