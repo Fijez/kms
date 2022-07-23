@@ -1,6 +1,7 @@
 package com.rtkit.fifth.element.kms.repository;
 
 import com.rtkit.fifth.element.kms.model.entity.Article;
+import com.rtkit.fifth.element.kms.model.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ArticleSpec implements Specification<Article> {
 
-    private final Optional<String> creator;
+    private final Optional<User> creator;
     private final Optional<String> title;
     private final Optional<String> topic;
     private final Optional<String> content;
@@ -26,7 +27,7 @@ public class ArticleSpec implements Specification<Article> {
         List<Predicate> predicates = new ArrayList<>();
         List<Predicate> tagPredicates = new ArrayList<>();
 
-        creator.filter(cr -> !cr.isBlank()).ifPresent(cr -> predicates.add(builder.equal(root.get("creator"), cr)));
+        creator.ifPresent(cr -> predicates.add(builder.equal(root.get("creator"), cr)));
         title.filter(ti -> !ti.isBlank()).ifPresent(ti -> predicates.add(builder.like(root.get("title"), ti)));
         topic.filter(to -> !to.isBlank()).ifPresent(to -> predicates.add(builder.like(root.get("topic"), to)));
         content.filter(co -> !co.isBlank()).ifPresent(

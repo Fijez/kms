@@ -5,6 +5,7 @@ import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.entity.Role;
+import com.rtkit.fifth.element.kms.model.entity.User;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.repository.*;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
@@ -23,7 +24,6 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -75,7 +75,8 @@ public class ArticleServiceImplementation implements ArticleService {
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
             Optional<String> content, Optional<String[]> tags, Pageable pageable) {
 
-        ArticleSpec articleSpec = new ArticleSpec(creator, title, topic, content, tags);
+        Optional<User> user = Optional.of(userRepo.findByEmail(creator.get()));
+        ArticleSpec articleSpec = new ArticleSpec(user, title, topic, content, tags);
         Slice<Article> articles = articleRepo.findAll(articleSpec, pageable);
         return filterByAccess(articles).map(articleMapper::modelToDto);
     }
@@ -100,7 +101,7 @@ public class ArticleServiceImplementation implements ArticleService {
         }));
 
         articles.forEach(article -> {
-            if (authorities.contains(article.getNamespace().getTitle().toUpperCase())) {
+            if (article.getNamespace() != null && authorities.contains(article.getNamespace().getTitle().toUpperCase())) {
                 accessibleArticles.add(article);
             }
         });
