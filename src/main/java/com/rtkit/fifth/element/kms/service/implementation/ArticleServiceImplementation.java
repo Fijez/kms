@@ -16,7 +16,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,17 +72,15 @@ public class ArticleServiceImplementation implements ArticleService {
 
     @Override
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
-            Optional<String> content, Optional<String[]> tags, Pageable pageable) {
+            Optional<String> content, Optional<String[]> tags, Pageable pageable, Authentication authentication) {
 
         Optional<User> user = Optional.of(userRepo.findByEmail(creator.get()));
         ArticleSpec articleSpec = new ArticleSpec(user, title, topic, content, tags);
         Slice<Article> articles = articleRepo.findAll(articleSpec, pageable);
-        return filterByAccess(articles).map(articleMapper::modelToDto);
+        return filterByAccess(articles, authentication).map(articleMapper::modelToDto);
     }
 
-    private Slice<Article> filterByAccess(Slice<Article> articles) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+    private Slice<Article> filterByAccess(Slice<Article> articles, Authentication authentication) {
         if (authentication instanceof AnonymousAuthenticationToken) {
             throw new RuntimeException("Unauthorized");
         }
