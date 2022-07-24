@@ -3,20 +3,26 @@ package com.rtkit.fifth.element.kms.controller;
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
+import com.rtkit.fifth.element.kms.model.entity.Article;
+import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,10 +30,12 @@ import java.util.Optional;
 public class ArticleRestController {
 
     private final ArticleService articleService;
+    private final ArticleMapper articleMapper;
 
     @Autowired
-    public ArticleRestController(ArticleService articleService) {
+    public ArticleRestController(ArticleService articleService, ArticleMapper articleMapper) {
         this.articleService = articleService;
+        this.articleMapper = articleMapper;
     }
 
     @GetMapping
@@ -45,6 +53,32 @@ public class ArticleRestController {
                                                     @PageableDefault(size = 5) Pageable pageable,
                                                     Authentication authentication) {
         return ResponseEntity.ok(articleService.searchArticles(creator, title, topic, content, tags, pageable, authentication));
+    }
+
+    @GetMapping(value = "/{id}")
+    @Parameter(name = "id", in = ParameterIn.QUERY, content = @Content(schema = @Schema(type = "long")), description = "Id статьи")
+    public ModelAndView read(@PathVariable Long id) {
+        System.out.println(id);
+        Optional<Article> optionalArticle = articleService.findById(id);
+        ArticleDto articleDto = null;
+        if (optionalArticle.isPresent()) {
+            articleDto = articleMapper.modelToDto(articleService.findById(id).get());
+        } else {
+            throw new RuntimeException("Article not found");
+        }
+        ModelAndView mav = new ModelAndView("article");
+        System.out.println(articleDto.getCreator());
+        System.out.println(articleDto.getTitle());
+        System.out.println(articleDto.getTopic());
+        System.out.println(articleDto.getVersionDate().toString());
+        System.out.println(articleDto.getContent());
+
+        mav.addObject("author", articleDto.getCreator());
+        mav.addObject("title", articleDto.getTitle());
+        mav.addObject("topic", articleDto.getTopic());
+        mav.addObject("date", articleDto.getVersionDate().toString());
+        mav.addObject("content", articleDto.getContent());
+        return mav;
     }
 
     @PostMapping
