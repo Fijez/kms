@@ -1,23 +1,22 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupDto {
-
+public class NamespaceUpdateDto {
     private Long id;
 
     private String title;
 
-    private String description;
-
-    private List<Long> article;
-
     private List<Long> users;
+
+    private List<Long> articles;
 }

@@ -9,8 +9,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupDto {
-
+public class GroupUpdateDto {
     private Long id;
 
     private String title;

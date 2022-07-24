@@ -53,8 +53,7 @@ public class ArticleRestController {
     }
 
     @PutMapping
-    public ArticleDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
-        //
+    public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
         return articleService.update(articleUpdateDto);
     }
 }

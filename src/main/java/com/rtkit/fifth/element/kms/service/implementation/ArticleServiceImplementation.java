@@ -23,25 +23,32 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ArticleServiceImplementation implements ArticleService {
 
     private final ArticleRepo articleRepo;
     private final ArticleMapper articleMapper;
     private final GroupService groupService;
     private final UserRepo userRepo;
+    private final ArticleUserRepo articleUserRepo;
+    private final TagRepo tagRepo;
+    private final NamespaceRepo namespaceRepo;
 
     @Autowired
     public ArticleServiceImplementation(ArticleRepo articleRepo
             , ArticleMapper articleMapper
             , GroupService groupService
-            , UserRepo userRepo) {
+            , UserRepo userRepo, ArticleUserRepo articleUserRepo, TagRepo tagRepo, NamespaceRepo namespaceRepo) {
         this.articleRepo = articleRepo;
         this.articleMapper = articleMapper;
         this.groupService = groupService;
         this.userRepo = userRepo;
+        this.articleUserRepo = articleUserRepo;
+        this.tagRepo = tagRepo;
+        this.namespaceRepo = namespaceRepo;
     }
 
     //TODO: реализовать добавление полей которые сейчас null, или убрать их
@@ -52,7 +59,7 @@ public class ArticleServiceImplementation implements ArticleService {
         Article article = Article.builder()
                 .groups(null)
                 .users(null)
-                .namespace(null)
+                .namespace(null)//TODO: сделать дефолтный
                 .tags(null)
                 .content(articleAddDto.getContent())
                 .title(articleAddDto.getTitle())
@@ -66,8 +73,9 @@ public class ArticleServiceImplementation implements ArticleService {
     }
 
     @Override
+    //TODO: реализовать
     public Optional<Article> findById(Long id) {
-        return articleRepo.findById(id);
+        return Optional.empty();
     }
 
     @Override
@@ -84,7 +92,7 @@ public class ArticleServiceImplementation implements ArticleService {
         User inquirer = userRepo.findByEmail(authentication.getName());
         Set<Namespace> namespaces = inquirer.getNamespaces();
         Set<List<ArticleGroup>> articleGroups = new HashSet<>();
-        inquirer.getGroups().forEach(group -> articleGroups.add(group.getArticles()));
+        inquirer.getGroups().forEach(group -> articleGroups.add(group.getArticles().stream().collect(Collectors.toList())));
 
         ArticleSpec articleSpec = new ArticleSpec(user, title, topic, content, tags, namespaces, articleGroups, inquirer);
         Slice<Article> articles = articleRepo.findAll(articleSpec, pageable);
@@ -124,37 +132,30 @@ public class ArticleServiceImplementation implements ArticleService {
 //
 //        return new SliceImpl<>(new ArrayList<>(accessibleArticles), articles.getPageable(), articles.hasNext());
 //    }
-
-
-    //TODO удалить после проверки работы поиска статей, удалить ArticleSpecification
-//    @Override
-//    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
-//
-//        ArticleSpecification articleSpecification = new ArticleSpecification();
-//        articleSpecification.add(searchCriteria);
-//        List<Article> articles = articleRepo.findAll(articleSpecification);
-//        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
-//
-//        return articleDtos;
-//    }
-
-
-    @Override
-    @Transactional
-    public ArticleDto update(ArticleUpdateDto articleUpdateDto) {
-        var article = articleRepo.findById(articleUpdateDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-        article.setTitle(articleUpdateDto.getTitle());
+@Override
+@Transactional
+public ArticleUpdateDto update(ArticleUpdateDto articleDto) {
+    var article = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+    article.setTitle(articleDto.getTitle());
+    article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
+    if (articleDto.getContent() != null) {
+        article.setContent(articleDto.getContent());
         article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
-        article.setCreator(userRepo.findByEmail(articleUpdateDto.getCreator()));
-
-        if (articleUpdateDto.getContent() != null) {
-            article.setContent(articleUpdateDto.getContent());
-        }
-        if (articleUpdateDto.getTopic() != null) {
-            article.setTopic(articleUpdateDto.getTopic());
-        }
-
-        articleRepo.save(article);
-        return articleMapper.modelToDto(article);
     }
+    if (articleDto.getTopic() != null) {
+        article.setTopic(articleDto.getTopic());
+    }
+    Set<ArticleUser> users = article.getUsers();
+    articleDto.getUsers().forEach(user -> users.add(new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request")))));
+    articleDto.getUsers().forEach(user -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request"))))));
+    article.setUsers(users);
+    Set<Tag> tags = article.getTags();
+    articleDto.getTags().forEach(tag -> tags.add(tagRepo.findById(tag).orElseThrow(() -> new EntityNotFoundException("bad request"))));
+    article.setTags(tags);
+    article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
+    if (articleDto.getNamespaceId() != null)
+        article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")));
+    articleRepo.save(article);
+    return articleDto;
+}
 }

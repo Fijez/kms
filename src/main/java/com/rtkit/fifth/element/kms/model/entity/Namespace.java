@@ -11,19 +11,21 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "namespace", uniqueConstraints = @UniqueConstraint(columnNames = {"title"}))
+@Entity(name = "namespace")
 public class Namespace {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Min(0)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String title;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
+    @JoinTable(name = "namespace_users",
+            joinColumns = @JoinColumn(name = "namespace_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set<User> users;
 
     @ManyToOne(fetch = FetchType.LAZY)
