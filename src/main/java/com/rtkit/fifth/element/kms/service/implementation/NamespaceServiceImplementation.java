@@ -39,7 +39,7 @@ public class NamespaceServiceImplementation implements NamespaceService {
     }
 
     @Override
-    //TODO: возвращать DTO
+    //TODO: РІРѕР·РІСЂР°С‰Р°С‚СЊ DTO
     public Namespace getByTitle(String title) {
         return namespaceRepo.getByTitle(title);
     }

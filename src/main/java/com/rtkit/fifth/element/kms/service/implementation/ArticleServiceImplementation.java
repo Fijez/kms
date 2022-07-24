@@ -6,22 +6,20 @@ import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.entity.Role;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
-import com.rtkit.fifth.element.kms.repository.*;
+import com.rtkit.fifth.element.kms.repository.ArticleRepo;
+import com.rtkit.fifth.element.kms.repository.ArticleSpec;
+import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
 import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -78,19 +76,6 @@ public class ArticleServiceImplementation implements ArticleService {
         Slice<Article> articles = articleRepo.findAll(articleSpec, pageable);
         return articles.map(articleMapper::modelToDto);
     }
-
-//    @Override
-//    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
-//
-//        ArticleSpecification articleSpecification = new ArticleSpecification();
-//        articleSpecification.add(searchCriteria);
-//        List<Article> articles = articleRepo.findAll(articleSpecification);
-//        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
-//
-//        return articleDtos;
-//    }
-
-
 
     @Override
     @Transactional

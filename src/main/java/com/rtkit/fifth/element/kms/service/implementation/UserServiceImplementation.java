@@ -128,6 +128,25 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
+    @Transactional
+    public boolean saveUser(User user) {
+        User userFromDB = userRepo.findByEmail(user.getEmail());
+
+        if (userFromDB != null) {
+            return false;
+        }
+        userRepo.save(
+                User.builder()
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .password(passwordEncoder.encode(user.getPassword()))
+                        .role(user.getRole())
+                        .build());
+
+        return true;
+    }
+
+    @Override
     public boolean deleteUser(Long userId) {
         if (userRepo.findById(userId).isPresent()) {
             userRepo.deleteById(userId);
