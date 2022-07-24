@@ -34,6 +34,11 @@ public class User {
             cascade = {CascadeType.MERGE})
     private Set<Namespace> createdNamespaces;
 
+    @ManyToMany(mappedBy = "users",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private Set<Group> groups;
+
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
