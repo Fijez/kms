@@ -1,19 +1,15 @@
 package com.rtkit.fifth.element.kms.model.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
+@Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -21,20 +17,29 @@ import java.util.Set;
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Min(0)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotBlank
-    @Column
+    @Column(unique = true)
     private String title;
 
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "group")
-    private List<ArticleGroup> articles;
+    @OneToMany(mappedBy = "group",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    @ToString.Exclude
+    private Set<ArticleGroup> articles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(
+            name = "groups_users",
+            joinColumns = @JoinColumn(name = "groups_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set<User> users;
 }

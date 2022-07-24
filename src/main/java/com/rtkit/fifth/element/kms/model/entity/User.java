@@ -1,16 +1,13 @@
 package com.rtkit.fifth.element.kms.model.entity;
 
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,7 +20,7 @@ import java.util.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Min(0)
     private Long id;
 
@@ -47,6 +44,11 @@ public class User {
             cascade = {CascadeType.REFRESH})
     private Set<ArticleUser> articles;
 
+    @ManyToMany(mappedBy = "articles",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    private Set<Namespace> Namespaces;
+
     @NotBlank
     @Email
     @Column
@@ -68,8 +70,4 @@ public class User {
 
     private Role role;
 
-    @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.REFRESH})
-    private Set<Namespace> Namespaces;
 }

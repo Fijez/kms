@@ -1,12 +1,12 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
-import com.rtkit.fifth.element.kms.model.entity.Article;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,11 +20,9 @@ public class ArticleUpdateDto {
     private String topic;
     private String content;
     private String creator;
-    public ArticleUpdateDto(Article article) {
-        this.id = article.getId();
-        this.title = article.getTitle();
-        this.topic = article.getTopic();
-        this.content = article.getContent();
-        this.creator = article.getCreator().getEmail();
-    }
+    private List<Long> tags;
+    private String roleAccess;
+    private List<Long> users;
+    private Long namespaceId;
+
 }

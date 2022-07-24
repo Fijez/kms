@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Embeddable
 @EqualsAndHashCode
-class ArticleGroupId implements Serializable {
+public class ArticleGroupId implements Serializable {
     @Column(name = "article_id")
     private Long articleId;
     @Column(name = "group_id")
