@@ -66,6 +66,11 @@ public class ArticleServiceImplementation implements ArticleService {
     }
 
     @Override
+    public Optional<Article> findById(Long id){
+        return articleRepo.findById(id);
+    }
+
+    @Override
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
             Optional<String> content, Optional<String[]> tags, Pageable pageable) {
 
@@ -74,16 +79,16 @@ public class ArticleServiceImplementation implements ArticleService {
         return articles.map(articleMapper::modelToDto);
     }
 
-    @Override
-    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
-
-        ArticleSpecification articleSpecification = new ArticleSpecification();
-        articleSpecification.add(searchCriteria);
-        List<Article> articles = articleRepo.findAll(articleSpecification);
-        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
-
-        return articleDtos;
-    }
+//    @Override
+//    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
+//
+//        ArticleSpecification articleSpecification = new ArticleSpecification();
+//        articleSpecification.add(searchCriteria);
+//        List<Article> articles = articleRepo.findAll(articleSpecification);
+//        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
+//
+//        return articleDtos;
+//    }
 
 
 

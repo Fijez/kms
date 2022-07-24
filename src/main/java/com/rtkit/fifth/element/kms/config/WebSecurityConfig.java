@@ -16,7 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] ALL = {"/", "/resources/**"};
     private static final String[] UNAUTHORIZED = {"/registration"};
-    private static final String[] UI = {"/swagger-ui/**"};
+    private static final String[] SWAGGER = {"/swagger-ui/**"};
     private static final String[] ADMIN = {"/admin/**"};
     private static final String[] AUTHORIZED = {"/search"};
 
@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers(UI).permitAll()
+                .antMatchers(SWAGGER).permitAll()
                 .antMatchers(UNAUTHORIZED).not().fullyAuthenticated()
                 .antMatchers(ADMIN).hasRole(ADMIN_ROLE)
                 .antMatchers(ALL).permitAll()

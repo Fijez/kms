@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 @Table(name = "tag")
 public class Tag {
@@ -22,6 +21,6 @@ public class Tag {
     private String title;
 
     @ManyToMany(fetch = FetchType.LAZY,
-    cascade = {CascadeType.REFRESH})
+            cascade = {CascadeType.REFRESH})
     private List<Article> articles;
 }

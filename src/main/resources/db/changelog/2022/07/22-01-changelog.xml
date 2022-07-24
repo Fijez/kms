@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1658476293473-1" author="Artem">
+        <createTable tableName="groups">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_groups"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1658476293473-2" author="Artem">
+        <createTable tableName="groups_users">
+            <column name="groups_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_groups_users"/>
+            </column>
+            <column name="users_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_groups_users"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1658476293473-6" author="Artem">
+        <dropForeignKeyConstraint baseTableName="articles_groups" constraintName="fk_articles_groups_on_group"/>
+    </changeSet>
+    <changeSet id="1658476293473-7" author="Artem">
+        <dropForeignKeyConstraint baseTableName="group_users" constraintName="fk_grouse_on_group"/>
+    </changeSet>
+    <changeSet id="1658476293473-8" author="Artem">
+        <dropForeignKeyConstraint baseTableName="group_users" constraintName="fk_grouse_on_user"/>
+    </changeSet>
+    <changeSet id="1658476293473-10" author="Artem">
+        <dropTable cascadeConstraints="true" tableName="group_users"/>
+    </changeSet>
+    <changeSet id="1658476293473-9" author="Artem">
+        <dropTable cascadeConstraints="true" tableName="group"/>
+    </changeSet>
+    <changeSet id="1658476293473-3" author="Artem">
+        <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="articles_groups"
+                                 constraintName="FK_ARTICLES_GROUPS_ON_GROUP" referencedColumnNames="id"
+                                 referencedTableName="groups"/>
+    </changeSet>
+    <changeSet id="1658476293473-4" author="Artem">
+        <addForeignKeyConstraint baseColumnNames="groups_id" baseTableName="groups_users"
+                                 constraintName="fk_grouse_on_group" referencedColumnNames="id"
+                                 referencedTableName="groups"/>
+    </changeSet>
+    <changeSet id="1658476293473-5" author="Artem">
+        <addForeignKeyConstraint baseColumnNames="users_id" baseTableName="groups_users"
+                                 constraintName="fk_grouse_on_user" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+</databaseChangeLog>

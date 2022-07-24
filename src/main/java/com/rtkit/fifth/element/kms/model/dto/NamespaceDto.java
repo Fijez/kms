@@ -18,9 +18,5 @@ public class NamespaceDto {
 
     private String title;
 
-    private Set<UserDto> users;
-
-    private UserDto creator;
-
-    private Set<ArticleDto> articles;
+    private String creator;
 }
