@@ -41,8 +41,8 @@
             line-height: 42px;
             font-weight: 700;
             color: white;
-            margin: 1px;
-            padding: 5px;
+            margin: 0;
+            padding: 0;
         }
 
         h3 {
@@ -50,8 +50,8 @@
             line-height: 42px;
             font-weight: 700;
             color: white;
-            margin: 1px;
-            padding: 5px;
+            margin: 0;
+            padding: 0;
         }
 
         h4 {
@@ -59,13 +59,13 @@
             line-height: 42px;
             font-weight: 700;
             color: white;
-            margin: 1px;
-            padding: 5px;
+            margin: 0;
+            padding: 0;
         }
 
         p {
-            margin: 1px;
-            padding: 5px;
+            margin: 0;
+            padding: 0;
         }
 
         input {
@@ -110,9 +110,9 @@
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.18);
 
-            margin: 100px auto auto;
-            width: 80%;
-            padding: 10px;
+            margin: 50px auto auto;
+            width: 60%;
+            padding: 10px 100px;
             text-align: center;
         }
     </style>
