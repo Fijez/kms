@@ -21,7 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 
 public class UserServiceImplementation implements UserService, UserDetailsService {
 
