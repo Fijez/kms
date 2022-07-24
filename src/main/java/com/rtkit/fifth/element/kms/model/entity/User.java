@@ -1,16 +1,12 @@
 package com.rtkit.fifth.element.kms.model.entity;
 
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 
 @Getter
@@ -21,10 +17,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Min(0)
     private Long id;
 
@@ -42,6 +38,11 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
     private Set<ArticleUser> articles;
+
+    @ManyToMany(mappedBy = "articles",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH})
+    private Set<Namespace> Namespaces;
 
     @NotBlank
     @Email
@@ -64,39 +65,4 @@ public class User implements UserDetails {
 
     private Role role;
 
-    @ManyToMany(mappedBy = "articles",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.REFRESH})
-    private Set<Namespace> Namespaces;
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(getRole());
-    }
-
-    @Override
-    public String getUsername() {
-        return getEmail();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

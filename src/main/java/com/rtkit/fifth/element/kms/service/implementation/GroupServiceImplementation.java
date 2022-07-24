@@ -17,7 +17,6 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 
 @Service
-@Transactional
 public class GroupServiceImplementation implements GroupService {
 
     private final GroupRepo groupRepo;
@@ -34,7 +33,6 @@ public class GroupServiceImplementation implements GroupService {
         this.groupMapper = groupMapper;
         this.articleGroupRepo = articleGroupRepo;
     }
-
 
     @Override
     @Transactional
@@ -56,13 +54,13 @@ public class GroupServiceImplementation implements GroupService {
         group.setTitle(groupDto.getTitle());
         group.setDescription(groupDto.getDescription());
         Set<ArticleGroup> articles = group.getArticles();
-        groupDto.getArticle().forEach(art -> articles.add(new ArticleGroup(new ArticleGroupId(art,group.getId()), Role.USER, articleRepo.findById(art).orElseThrow(()-> new EntityNotFoundException("bad request")),group )));
-        groupDto.getArticle().forEach(art -> articleGroupRepo.save(new ArticleGroup(new ArticleGroupId(art,group.getId()), Role.USER, articleRepo.findById(art).orElseThrow(()-> new EntityNotFoundException("bad request")),group )));
+        groupDto.getArticle().forEach(art -> articles.add(new ArticleGroup(new ArticleGroupId(art, group.getId()), Role.USER, articleRepo.findById(art).orElseThrow(() -> new EntityNotFoundException("bad request")), group)));
+        groupDto.getArticle().forEach(art -> articleGroupRepo.save(new ArticleGroup(new ArticleGroupId(art, group.getId()), Role.USER, articleRepo.findById(art).orElseThrow(() -> new EntityNotFoundException("bad request")), group)));
         group.setArticles(articles);
         Set<User> users = group.getUsers();
-        groupDto.getUsers().forEach(user-> users.add(userRepo.findById(user).orElseThrow(()-> new EntityNotFoundException("bad request"))));
+        groupDto.getUsers().forEach(user -> users.add(userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request"))));
         group.setUsers(users);
         groupRepo.save(group);
-        return  groupDto;
+        return groupDto;
     }
 }

@@ -23,8 +23,7 @@ public class NamespaceController {
     }
 
     @PutMapping
-    public NamespaceUpdateDto update (@RequestBody NamespaceUpdateDto namespaceUpdateDto)
-    {
+    public NamespaceUpdateDto update(@RequestBody NamespaceUpdateDto namespaceUpdateDto) {
         return namespaceService.update(namespaceUpdateDto);
     }
 }

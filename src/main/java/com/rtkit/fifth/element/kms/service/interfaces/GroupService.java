@@ -5,6 +5,7 @@ import com.rtkit.fifth.element.kms.model.dto.GroupUpdateDto;
 
 public interface GroupService {
 
- GroupDto groupAdd (GroupDto groupDto);
- GroupUpdateDto groupUpdate (GroupUpdateDto groupDto);
+    GroupDto groupAdd(GroupDto groupDto);
+
+    GroupUpdateDto groupUpdate(GroupUpdateDto groupDto);
 }

@@ -15,11 +15,12 @@ public class GroupController {
     }
 
     @PostMapping
-    public GroupDto groupAdd(@RequestBody GroupDto groupDto){
+    public GroupDto groupAdd(@RequestBody GroupDto groupDto) {
         return groupService.groupAdd(groupDto);
     }
+
     @PutMapping
-    public GroupUpdateDto groupUpdate(@RequestBody GroupUpdateDto groupDto){
+    public GroupUpdateDto groupUpdate(@RequestBody GroupUpdateDto groupDto) {
         return groupService.groupUpdate(groupDto);
     }
 }

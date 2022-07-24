@@ -4,7 +4,6 @@ package com.rtkit.fifth.element.kms.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -14,15 +13,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Entity
-@Table(name = "groups")
+@Entity(name = "groups")
 public class Group {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String title;
 
     @Column
@@ -40,8 +38,8 @@ public class Group {
                     CascadeType.MERGE
             })
     @JoinTable(
-            name = "user_group",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+            name = "groups_users",
+            joinColumns = @JoinColumn(name = "groups_id"),
+            inverseJoinColumns = @JoinColumn(name = "users_id"))
     private Set<User> users;
 }

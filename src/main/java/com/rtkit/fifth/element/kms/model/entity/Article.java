@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -20,18 +19,17 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-
 @Entity(name = "article")
 public class Article {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Positive
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
     @OneToMany(mappedBy = "article",
@@ -49,9 +47,6 @@ public class Article {
     @Column
     @NotBlank
     private String title;
-
-//    @Column
-//    private String author;
 
     @Column
     private String topic;
@@ -82,6 +77,7 @@ public class Article {
             name = "tag_articles",
             joinColumns = @JoinColumn(name = "articles_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @ToString.Exclude
     private Set<Tag> tags;
 
     @Override
@@ -97,11 +93,11 @@ public class Article {
         return getClass().hashCode();
     }
 
-    public void addTag (Tag tag){
+    public void addTag(Tag tag) {
         tags.add(tag);
     }
 
-    public void removeTag (Tag tag){
+    public void removeTag(Tag tag) {
         tags.remove(tag);
     }
 }

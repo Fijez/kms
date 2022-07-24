@@ -4,8 +4,7 @@ package com.rtkit.fifth.element.kms.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Positive;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,15 +12,17 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "tag")
+@Entity(name = "tag")
 public class Tag {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String title;
+
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    private Set<Article> articles;
 
 }

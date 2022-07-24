@@ -1,6 +1,5 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
-import com.rtkit.fifth.element.kms.model.entity.Article;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

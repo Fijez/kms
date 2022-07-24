@@ -5,6 +5,7 @@ import com.rtkit.fifth.element.kms.model.dto.NamespaceUpdateDto;
 
 public interface NamespaceService {
     NamespaceDto addNewNamespace(NamespaceDto namespaceDto);
-    NamespaceUpdateDto update (NamespaceUpdateDto namespaceDto);
+
+    NamespaceUpdateDto update(NamespaceUpdateDto namespaceDto);
 }
 
