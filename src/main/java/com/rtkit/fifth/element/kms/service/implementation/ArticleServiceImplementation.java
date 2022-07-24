@@ -3,9 +3,7 @@ package com.rtkit.fifth.element.kms.service.implementation;
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
-import com.rtkit.fifth.element.kms.model.entity.Article;
-import com.rtkit.fifth.element.kms.model.entity.Role;
-import com.rtkit.fifth.element.kms.model.entity.User;
+import com.rtkit.fifth.element.kms.model.entity.*;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.repository.*;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
@@ -13,7 +11,6 @@ import com.rtkit.fifth.element.kms.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -74,54 +74,69 @@ public class ArticleServiceImplementation implements ArticleService {
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
             Optional<String> content, Optional<String[]> tags, Pageable pageable, Authentication authentication) {
 
-        Optional<User> user = Optional.of(userRepo.findByEmail(creator.get()));
-        ArticleSpec articleSpec = new ArticleSpec(user, title, topic, content, tags);
-        Slice<Article> articles = articleRepo.findAll(articleSpec, pageable);
-        return filterByAccess(articles, authentication).map(articleMapper::modelToDto);
-    }
-
-    private Slice<Article> filterByAccess(Slice<Article> articles, Authentication authentication) {
         if (authentication instanceof AnonymousAuthenticationToken) {
             throw new RuntimeException("Unauthorized");
         }
 
-        var grantedAuthorities = authentication.getAuthorities();
-        Set<String> authorities = new HashSet<>();
-        grantedAuthorities.forEach(a -> authorities.add(a.getAuthority()));
+        Optional<User> user = Optional.of(userRepo.findByEmail(creator.get()));
 
-        Set<Article> accessibleArticles = new HashSet<>();
 
-        articles.forEach(article -> article.getGroups().forEach(articleGroup -> {
-            if (authorities.contains(articleGroup.getGroup().getTitle().toUpperCase())) {
-                accessibleArticles.add(article);
-            }
-        }));
+        User inquirer = userRepo.findByEmail(authentication.getName());
+        Set<Namespace> namespaces = inquirer.getNamespaces();
+        Set<List<ArticleGroup>> articleGroups = new HashSet<>();
+        inquirer.getGroups().forEach(group -> articleGroups.add(group.getArticles()));
 
-        articles.forEach(article -> {
-            if (article.getNamespace() != null && authorities.contains(article.getNamespace().getTitle().toUpperCase())) {
-                accessibleArticles.add(article);
-            }
-        });
-
-        articles.forEach(article -> article.getUsers().forEach(articleUser -> {
-            if (authorities.contains(articleUser.getUserRole().getAuthority().toUpperCase() + "_" + articleUser.getArticle().getTitle().toUpperCase())) {
-                accessibleArticles.add(article);
-            }
-        }));
-
-        return new SliceImpl<>(new ArrayList<>(accessibleArticles), articles.getPageable(), articles.hasNext());
+        ArticleSpec articleSpec = new ArticleSpec(user, title, topic, content, tags, namespaces, articleGroups, inquirer);
+        Slice<Article> articles = articleRepo.findAll(articleSpec, pageable);
+        return articles.map(articleMapper::modelToDto);
     }
 
-    @Override
-    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
+    //TODO удалить метод после проверки работы ArticleSpec с новой логикой по проверке доступа
 
-        ArticleSpecification articleSpecification = new ArticleSpecification();
-        articleSpecification.add(searchCriteria);
-        List<Article> articles = articleRepo.findAll(articleSpecification);
-        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
+//    private Slice<Article> filterByAccess(Slice<Article> articles, Authentication authentication) {
+//        if (authentication instanceof AnonymousAuthenticationToken) {
+//            throw new RuntimeException("Unauthorized");
+//        }
+//
+//        var grantedAuthorities = authentication.getAuthorities();
+//        Set<String> authorities = new HashSet<>();
+//        grantedAuthorities.forEach(a -> authorities.add(a.getAuthority()));
+//
+//        Set<Article> accessibleArticles = new HashSet<>();
+//
+//        articles.forEach(article -> article.getGroups().forEach(articleGroup -> {
+//            if (authorities.contains(articleGroup.getGroup().getTitle().toUpperCase())) {
+//                accessibleArticles.add(article);
+//            }
+//        }));
+//
+//        articles.forEach(article -> {
+//            if (article.getNamespace() != null && authorities.contains(article.getNamespace().getTitle().toUpperCase())) {
+//                accessibleArticles.add(article);
+//            }
+//        });
+//
+//        articles.forEach(article -> article.getUsers().forEach(articleUser -> {
+//            if (authorities.contains(articleUser.getUserRole().getAuthority().toUpperCase() + "_" + articleUser.getArticle().getTitle().toUpperCase())) {
+//                accessibleArticles.add(article);
+//            }
+//        }));
+//
+//        return new SliceImpl<>(new ArrayList<>(accessibleArticles), articles.getPageable(), articles.hasNext());
+//    }
 
-        return articleDtos;
-    }
+
+    //TODO удалить после проверки работы поиска статей, удалить ArticleSpecification
+//    @Override
+//    public List<ArticleDto> searchArticle(List<ArticleSearchCriteria> searchCriteria) {
+//
+//        ArticleSpecification articleSpecification = new ArticleSpecification();
+//        articleSpecification.add(searchCriteria);
+//        List<Article> articles = articleRepo.findAll(articleSpecification);
+//        List<ArticleDto> articleDtos = articleMapper.modelToDto(articles);
+//
+//        return articleDtos;
+//    }
 
 
     @Override
