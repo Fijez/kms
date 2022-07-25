@@ -6,13 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleUpdateDto {
+public class ArticleUpdateDto implements Iterable<Long> {
 
     @NotBlank
     private Long id;
@@ -22,7 +25,21 @@ public class ArticleUpdateDto {
     private Long creatorId;
     private List<Long> tags;
     private String roleAccess;
-    private List<UserRoleDto> users;//TODO:надо проверить на наличие уже существующих пользователей
+    private List<UserRoleDto> users;//TODO:РЅР°РґРѕ РїСЂРѕРІРµСЂРёС‚СЊ РЅР° РЅР°Р»РёС‡РёРµ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
     private Long namespaceId;
 
+    @Override
+    public Iterator<Long> iterator() {
+        return tags.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super Long> action) {
+        Iterable.super.forEach(action);
+    }
+
+    @Override
+    public Spliterator<Long> spliterator() {
+        return Iterable.super.spliterator();
+    }
 }

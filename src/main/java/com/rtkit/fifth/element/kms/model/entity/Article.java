@@ -2,16 +2,10 @@ package com.rtkit.fifth.element.kms.model.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -20,17 +14,20 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "article")
-public class Article {
+public class
+Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_id_generator")
     @Positive
     private Long id;
 
-    @NotNull
+    @OneToMany(mappedBy = "article",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+    @OrderBy("id ASC")
     @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User creator;
+    private SortedSet<Version> versions;
 
     @OneToMany(mappedBy = "article",
             fetch = FetchType.LAZY,
@@ -45,19 +42,7 @@ public class Article {
     private List<ArticleGroup> groups;
 
     @Column
-    @NotBlank
-    private String title;
-
-    @Column
     private String topic;
-
-    @Column
-    @DateTimeFormat
-    private LocalDateTime versionDate;
-
-    @Basic(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private String content;
 
     private Role roleAccess;
 
@@ -97,7 +82,29 @@ public class Article {
         tags.add(tag);
     }
 
+    public void addTags(List<Tag> tags) {
+        this.tags.addAll(tags);
+    }
+
     public void removeTag(Tag tag) {
         tags.remove(tag);
+    }
+
+    public void addVersion(Version version) {
+        if (this.versions == null) {
+            this.versions = new TreeSet<>();
+        }
+        this.versions.add(version);
+    }
+
+    public void addVersions(SortedSet<Version> versions) {
+        if (this.versions == null) {
+            this.versions = new TreeSet<>();
+        }
+        this.versions.addAll(versions);
+    }
+
+    public void setVersions(SortedSet<Version> versions) {
+        this.versions = versions;
     }
 }

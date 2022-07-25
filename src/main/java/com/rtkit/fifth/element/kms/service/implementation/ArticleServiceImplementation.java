@@ -3,6 +3,7 @@ package com.rtkit.fifth.element.kms.service.implementation;
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
+import com.rtkit.fifth.element.kms.model.dto.UserRoleDto;
 import com.rtkit.fifth.element.kms.model.entity.*;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.repository.*;
@@ -37,11 +38,13 @@ public class ArticleServiceImplementation implements ArticleService {
     private final TagRepo tagRepo;
     private final NamespaceRepo namespaceRepo;
 
+    private final VersionRepo versionRepo;
+
     @Autowired
     public ArticleServiceImplementation(ArticleRepo articleRepo
             , ArticleMapper articleMapper
             , GroupService groupService
-            , UserRepo userRepo, ArticleUserRepo articleUserRepo, TagRepo tagRepo, NamespaceRepo namespaceRepo) {
+            , UserRepo userRepo, ArticleUserRepo articleUserRepo, TagRepo tagRepo, NamespaceRepo namespaceRepo, VersionRepo versionRepo) {
         this.articleRepo = articleRepo;
         this.articleMapper = articleMapper;
         this.groupService = groupService;
@@ -49,6 +52,7 @@ public class ArticleServiceImplementation implements ArticleService {
         this.articleUserRepo = articleUserRepo;
         this.tagRepo = tagRepo;
         this.namespaceRepo = namespaceRepo;
+        this.versionRepo = versionRepo;
     }
 
     //TODO: реализовать добавление полей которые сейчас null, или убрать их
@@ -60,13 +64,20 @@ public class ArticleServiceImplementation implements ArticleService {
                 .users(null)
                 .namespace(null)//TODO: сделать дефолтный
                 .tags(null)
-                .content(articleAddDto.getContent())
-                .title(articleAddDto.getTitle())
                 .topic(articleAddDto.getTopic())
-                .versionDate(LocalDateTime.now(ZoneId.systemDefault()))
-                .creator(userRepo.findByEmail(articleAddDto.getCreator()))
                 .roleAccess(Role.USER)
                 .build();
+
+        article = articleRepo.save(article);
+
+        Version version = Version.builder()
+                .id(new VersionsId(article.getId(), LocalDateTime.now(ZoneId.systemDefault())))
+                .content(articleAddDto.getContent())
+                .article(article)
+                .title(articleAddDto.getTitle())
+                .creator(userRepo.findByEmail(articleAddDto.getCreator()))
+                .build();
+        article.addVersion(version);
         articleRepo.save(article);
         return articleMapper.modelToDto(article);
     }
@@ -130,27 +141,21 @@ public class ArticleServiceImplementation implements ArticleService {
 //
 //        return new SliceImpl<>(new ArrayList<>(accessibleArticles), articles.getPageable(), articles.hasNext());
 //    }
+
+
     @Override
     public ArticleUpdateDto update(ArticleUpdateDto articleDto) {
 
         Article oldArticle = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-        //подразумевается, что указывают id существующего тега, надо поменять
-        if (articleDto.getTags() != null || articleDto.getTags().get(0) != null) {
-            oldArticle.getTags().addAll(articleDto.getTags().stream()
-                    .map(o -> tagRepo.findById(o).orElse(null))
-                    .collect(Collectors.toSet()));
+        //TODO:проверить
+        List<Tag> tags = tagRepo.findAllById(articleDto);
+        if (!tags.isEmpty()) {
+            oldArticle.addTags(tags);
         }
 
-        //TODO:найти в полученном списке пользователей уникальных
         Set<ArticleUser> users = oldArticle.getUsers();
-//        List<UserRoleDto> newUsers = articleDto.getUsers();
-//        users.forEach(o -> {
-//            if (o.getId().getArticleId().equals(articleDto.getId()) &&
-//                    newUsers.stream().filter(n ->  {
-//
-//                        n.getUserId().equals(o.getId().getUserId())
-//                    }))
-//        });
+        List<UserRoleDto> newUsers = articleDto.getUsers();
+        newUsers.removeIf(o -> users.stream().anyMatch(u -> u.getUser().getId().equals(o.getUserId())));
         users.addAll(articleDto.getUsers().stream().map(u ->
                 new ArticleUser(userRepo.findById(u.getUserId()).orElseThrow(),
                         articleRepo.findById(articleDto.getId()).orElseThrow(),
@@ -158,20 +163,24 @@ public class ArticleServiceImplementation implements ArticleService {
 
         Article newArticle = Article.builder()
                 .id(articleDto.getId())
-                .title(articleDto.getTitle())
-                .creator(userRepo.findById(articleDto.getCreatorId()).orElseThrow())
-                .content(Optional.of(articleDto.getContent()).orElse(oldArticle.getContent()))
-                .versionDate(Optional.of(articleDto.getContent()).stream()
-                        .map(content -> !content.isBlank() ? LocalDateTime.now(ZoneId.systemDefault()) : oldArticle.getVersionDate())
-                        .findFirst().get())
                 .topic(Optional.of(articleDto.getTopic()).orElse(oldArticle.getTopic()))
                 .users(users)
                 .tags(oldArticle.getTags())
                 .roleAccess(Optional.of(Role.valueOf(articleDto.getRoleAccess())).orElse(Role.USER))
-                .namespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")))
+                .namespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("namespace not exists")))
+                .versions(oldArticle.getVersions())
                 .build();
-        if (articleDto.getContent().compareTo(oldArticle.getContent()) != 0) {
-            //TODO: добавление новой записи/версии в бд и изменение всех связных индексов
+
+        Version newVersion = Version.builder()
+                .id(new VersionsId(articleDto.getId(), oldArticle.getVersions().last().getId().getVersion()))
+                .article(newArticle)
+                .content(Optional.of(articleDto.getContent()).orElse(oldArticle.getVersions().last().getContent()))
+                .creator(userRepo.findById(articleDto.getCreatorId()).orElseThrow())
+                .title(articleDto.getTitle())
+                .build();
+        if (!versionRepo.findById(oldArticle.getVersions().last().getId()).get().equals(newVersion)) {
+            newVersion.setId(new VersionsId(articleDto.getId(), LocalDateTime.now(ZoneId.systemDefault())));
+            newArticle.addVersion(newVersion);
         }
         articleRepo.save(newArticle);
         return articleDto;

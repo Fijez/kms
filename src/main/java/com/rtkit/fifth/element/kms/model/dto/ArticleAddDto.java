@@ -19,9 +19,9 @@ public class ArticleAddDto {
     private String content;
 
     public ArticleAddDto(Article article) {
-        this.title = article.getTitle();
+        this.title = article.getVersions().last().getTitle();
         this.topic = article.getTopic();
-        this.content = article.getContent();
-        this.creator = article.getCreator().getEmail();
+        this.content = article.getVersions().last().getContent();
+        this.creator = article.getVersions().last().getCreator().getEmail();
     }
 }

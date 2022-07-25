@@ -13,5 +13,6 @@
     <include file="db/changelog/2022/07/22-01-changelog.xml"/>
     <include file="db/changelog/2022/07/24-01-changelog.xml"/>
     <include file="db/changelog/2022/07/25-01-changelog.xml"/>
+    <include file="db/changelog/2022/07/25-02-changelog.xml"/>
 
 </databaseChangeLog>

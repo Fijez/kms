@@ -2,13 +2,13 @@ package com.rtkit.fifth.element.kms.service.implementation;
 
 import com.rtkit.fifth.element.kms.model.dto.UserDto;
 import com.rtkit.fifth.element.kms.model.dto.UserRegistrationInfo;
-import com.rtkit.fifth.element.kms.model.entity.*;
+import com.rtkit.fifth.element.kms.model.entity.Role;
+import com.rtkit.fifth.element.kms.model.entity.User;
 import com.rtkit.fifth.element.kms.model.mapper.UserMapper;
 import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.MyUserDetails;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -69,12 +68,12 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     public Collection<String> provideAuthorities(User user) {
         Set<String> authorities = new HashSet<>();
         authorities.add(user.getRole().getName());
-
-//      user.getGroups().forEach(group -> group.getArticles().forEach(articleGroup -> authorities.add(articleGroup.getGroupRole().getAuthority().toUpperCase() + "_" + articleGroup.getArticle().getTitle().toUpperCase())));
         user.getGroups().forEach(group -> authorities.add(group.getTitle().toUpperCase()));
-//      user.getNamespaces().forEach(namespace -> namespace.getArticles().forEach(article -> authorities.add(namespace.getTitle().toUpperCase() + "_" + article.getTitle().toUpperCase())));
         user.getNamespaces().forEach(namespace -> authorities.add(namespace.getTitle().toUpperCase()));
-        user.getArticles().forEach(articleUser -> authorities.add(articleUser.getUserRole().getAuthority().toUpperCase() + "_" + articleUser.getArticle().getTitle().toUpperCase()));
+        user.getArticles().forEach(articleUser -> authorities.add(
+                articleUser.getUserRole().getAuthority().toUpperCase() + "_" +
+                        articleUser.getArticle().getVersions().last().getTitle().toUpperCase()
+        ));
 
         return authorities;
     }

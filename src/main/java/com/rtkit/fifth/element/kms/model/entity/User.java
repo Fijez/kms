@@ -27,7 +27,7 @@ public class User {
     @OneToMany(mappedBy = "creator",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE})
-    private Set<Article> createdArticles;
+    private Set<Version> createdArticles;
 
     @OneToMany(mappedBy = "creator",
             fetch = FetchType.LAZY,
