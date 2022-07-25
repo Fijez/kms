@@ -97,7 +97,6 @@ public class ArticleServiceImplementation implements ArticleService {
         }
 
         Optional<User> user = Optional.of(userRepo.findByEmail(creator.get()));
-
         User inquirer = userRepo.findByEmail(authentication.getName());
         Set<Namespace> namespaces = inquirer.getNamespaces();
         Set<List<ArticleGroup>> articleGroups = new HashSet<>();

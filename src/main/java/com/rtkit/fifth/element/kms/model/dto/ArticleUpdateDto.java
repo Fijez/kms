@@ -1,5 +1,7 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +21,21 @@ public class ArticleUpdateDto implements Iterable<Long> {
 
     @NotBlank
     private Long id;
+    @Schema(description = "Новое название статьи")
     private String title;
+    @Schema(description = "Новая тема статьи")
     private String topic;
+    @Schema(description = "Новый текст статьи")
     private String content;
+    @Schema(description = "Новый создатель(модератор) статьи")
     private Long creatorId;
+    @ArraySchema(arraySchema = @Schema(description = "Id новых тегов"))
     private List<Long> tags;
+    @Schema(description = "Новый ролевой доступ к статье")
     private String roleAccess;
+    @ArraySchema(arraySchema = @Schema(description = "Id новых пользователей"))
     private List<UserRoleDto> users;//TODO:надо проверить на наличие уже существующих пользователей
+    @Schema(description = "Id для нового namespace")
     private Long namespaceId;
 
     @Override

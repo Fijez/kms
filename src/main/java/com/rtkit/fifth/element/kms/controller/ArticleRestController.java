@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/article")
+@Tag(name="Article controller", description="Создание, редактирование и поиск статей")
 public class ArticleRestController {
 
     private final ArticleService articleService;
@@ -78,11 +80,13 @@ public class ArticleRestController {
     }
 
     @PostMapping
+    @Operation(summary = "Добавление новой статьями")
     public ArticleDto addNewArticle(@RequestBody ArticleAddDto articleAddDto) {
         return articleService.addNewArticle(articleAddDto);
     }
 
     @PutMapping
+    @Operation(summary = "Редактирование существующей статьями")
     public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
         ArticleUpdateDto update = null;
         update = articleService.update(articleUpdateDto);
