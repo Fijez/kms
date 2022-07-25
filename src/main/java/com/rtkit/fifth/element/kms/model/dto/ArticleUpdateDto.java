@@ -19,10 +19,10 @@ public class ArticleUpdateDto {
     private String title;
     private String topic;
     private String content;
-    private String creator;
+    private Long creatorId;
     private List<Long> tags;
     private String roleAccess;
-    private List<Long> users;
+    private List<UserRoleDto> users;//TODO:надо проверить на наличие уже существующих пользователей
     private Long namespaceId;
 
 }

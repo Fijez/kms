@@ -54,7 +54,6 @@ public class ArticleServiceImplementation implements ArticleService {
     //TODO: реализовать добавление полей которые сейчас null, или убрать их
     // путем создания ArticleAddDto, или другим способом
     @Override
-    @Transactional
     public ArticleDto addNewArticle(ArticleAddDto articleAddDto) {
         Article article = Article.builder()
                 .groups(null)
@@ -80,7 +79,7 @@ public class ArticleServiceImplementation implements ArticleService {
 
     @Override
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
-            Optional<String> content, Optional<String[]> tags, Pageable pageable, Authentication authentication) {
+                                            Optional<String> content, Optional<String[]> tags, Pageable pageable, Authentication authentication) {
 
         if (authentication instanceof AnonymousAuthenticationToken) {
             throw new RuntimeException("Unauthorized");
@@ -100,7 +99,7 @@ public class ArticleServiceImplementation implements ArticleService {
 
     //TODO удалить метод после проверки работы ArticleSpec с новой логикой по проверке доступа
 
-//    private Slice<Article> filterByAccess(Slice<Article> articles, Authentication authentication) {
+    //    private Slice<Article> filterByAccess(Slice<Article> articles, Authentication authentication) {
 //        if (authentication instanceof AnonymousAuthenticationToken) {
 //            throw new RuntimeException("Unauthorized");
 //        }
@@ -131,30 +130,50 @@ public class ArticleServiceImplementation implements ArticleService {
 //
 //        return new SliceImpl<>(new ArrayList<>(accessibleArticles), articles.getPageable(), articles.hasNext());
 //    }
-@Override
-@Transactional
-public ArticleUpdateDto update(ArticleUpdateDto articleDto) {
-    var article = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-    article.setTitle(articleDto.getTitle());
-    article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
-    if (articleDto.getContent() != null) {
-        article.setContent(articleDto.getContent());
-        article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
+    @Override
+    public ArticleUpdateDto update(ArticleUpdateDto articleDto) {
+
+        Article oldArticle = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        //подразумевается, что указывают id существующего тега, надо поменять
+        if (articleDto.getTags() != null || articleDto.getTags().get(0) != null) {
+            oldArticle.getTags().addAll(articleDto.getTags().stream()
+                    .map(o -> tagRepo.findById(o).orElse(null))
+                    .collect(Collectors.toSet()));
+        }
+
+        //TODO:найти в полученном списке пользователей уникальных
+        Set<ArticleUser> users = oldArticle.getUsers();
+//        List<UserRoleDto> newUsers = articleDto.getUsers();
+//        users.forEach(o -> {
+//            if (o.getId().getArticleId().equals(articleDto.getId()) &&
+//                    newUsers.stream().filter(n ->  {
+//
+//                        n.getUserId().equals(o.getId().getUserId())
+//                    }))
+//        });
+        users.addAll(articleDto.getUsers().stream().map(u ->
+                new ArticleUser(userRepo.findById(u.getUserId()).orElseThrow(),
+                        articleRepo.findById(articleDto.getId()).orElseThrow(),
+                        Optional.of(u.getRole()).orElse(Role.USER))).collect(Collectors.toSet()));
+
+        Article newArticle = Article.builder()
+                .id(articleDto.getId())
+                .title(articleDto.getTitle())
+                .creator(userRepo.findById(articleDto.getCreatorId()).orElseThrow())
+                .content(Optional.of(articleDto.getContent()).orElse(oldArticle.getContent()))
+                .versionDate(Optional.of(articleDto.getContent()).stream()
+                        .map(content -> !content.isBlank() ? LocalDateTime.now(ZoneId.systemDefault()) : oldArticle.getVersionDate())
+                        .findFirst().get())
+                .topic(Optional.of(articleDto.getTopic()).orElse(oldArticle.getTopic()))
+                .users(users)
+                .tags(oldArticle.getTags())
+                .roleAccess(Optional.of(Role.valueOf(articleDto.getRoleAccess())).orElse(Role.USER))
+                .namespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")))
+                .build();
+        if (articleDto.getContent().compareTo(oldArticle.getContent()) != 0) {
+            //TODO: добавление новой записи/версии в бд и изменение всех связных индексов
+        }
+        articleRepo.save(newArticle);
+        return articleDto;
     }
-    if (articleDto.getTopic() != null) {
-        article.setTopic(articleDto.getTopic());
-    }
-    Set<ArticleUser> users = article.getUsers();
-    articleDto.getUsers().forEach(user -> users.add(new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request")))));
-    articleDto.getUsers().forEach(user -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request"))))));
-    article.setUsers(users);
-    Set<Tag> tags = article.getTags();
-    articleDto.getTags().forEach(tag -> tags.add(tagRepo.findById(tag).orElseThrow(() -> new EntityNotFoundException("bad request"))));
-    article.setTags(tags);
-    article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
-    if (articleDto.getNamespaceId() != null)
-        article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")));
-    articleRepo.save(article);
-    return articleDto;
-}
 }

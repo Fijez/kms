@@ -12,4 +12,5 @@ public interface ArticleMapper extends EntityMapper<ArticleDto, Article> {
 
     @Mapping(source = "article.creator.name", target = "creator")
     List<ArticleDto> modelToDto(List<Article> articles);
+
 }

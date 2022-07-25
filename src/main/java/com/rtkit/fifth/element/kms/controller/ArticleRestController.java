@@ -11,18 +11,15 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -58,7 +55,6 @@ public class ArticleRestController {
     @GetMapping(value = "/{id}")
     @Parameter(name = "id", in = ParameterIn.QUERY, content = @Content(schema = @Schema(type = "long")), description = "Id статьи")
     public ModelAndView read(@PathVariable Long id) {
-        System.out.println(id);
         Optional<Article> optionalArticle = articleService.findById(id);
         ArticleDto articleDto = null;
         if (optionalArticle.isPresent()) {
@@ -88,6 +84,8 @@ public class ArticleRestController {
 
     @PutMapping
     public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
-        return articleService.update(articleUpdateDto);
+        ArticleUpdateDto update = null;
+        update = articleService.update(articleUpdateDto);
+        return update;
     }
 }

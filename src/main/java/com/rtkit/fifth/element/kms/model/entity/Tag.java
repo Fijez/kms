@@ -16,7 +16,7 @@ import java.util.Set;
 public class Tag {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tag_id_generator")
     private Long id;
 
     @Column(nullable = false)

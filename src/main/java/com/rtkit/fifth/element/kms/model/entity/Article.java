@@ -23,7 +23,7 @@ import java.util.Set;
 public class Article {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_id_generator")
     @Positive
     private Long id;
 
@@ -34,7 +34,7 @@ public class Article {
 
     @OneToMany(mappedBy = "article",
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.REFRESH})
+            cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
     private Set<ArticleUser> users;
 

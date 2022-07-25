@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity(name = "namespace")
 public class Namespace {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "namespace_id_generator")
     @Min(0)
     private Long id;
 
