@@ -32,7 +32,7 @@ public class Article {
     @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
 
-    @OneToMany(mappedBy = "article",
+    @OneToMany( mappedBy = "article",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @ToString.Exclude
