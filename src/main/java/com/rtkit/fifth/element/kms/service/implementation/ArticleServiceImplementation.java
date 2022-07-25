@@ -73,14 +73,13 @@ public class ArticleServiceImplementation implements ArticleService {
     }
 
     @Override
-    //TODO: реализовать
     public Optional<Article> findById(Long id) {
-        return Optional.empty();
+        return articleRepo.findById(id);
     }
 
     @Override
     public Slice<ArticleDto> searchArticles(Optional<String> creator, Optional<String> title, Optional<String> topic,
-            Optional<String> content, Optional<String[]> tags, Pageable pageable, Authentication authentication) {
+                                            Optional<String> content, Optional<String[]> tags, Pageable pageable, Authentication authentication) {
 
         if (authentication instanceof AnonymousAuthenticationToken) {
             throw new RuntimeException("Unauthorized");
@@ -131,30 +130,36 @@ public class ArticleServiceImplementation implements ArticleService {
 //
 //        return new SliceImpl<>(new ArrayList<>(accessibleArticles), articles.getPageable(), articles.hasNext());
 //    }
-@Override
-@Transactional
-public ArticleUpdateDto update(ArticleUpdateDto articleDto) {
-    var article = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-    article.setTitle(articleDto.getTitle());
-    article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
-    if (articleDto.getContent() != null) {
-        article.setContent(articleDto.getContent());
-        article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
+    @Override
+    @Transactional
+    public ArticleUpdateDto update(ArticleUpdateDto articleDto) {
+        var article = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        article.setTitle(articleDto.getTitle());
+        article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
+
+        if (articleDto.getContent() != null) {
+            article.setContent(articleDto.getContent());
+            article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
+        }
+
+        if (articleDto.getTopic() != null) {
+            article.setTopic(articleDto.getTopic());
+        }
+
+        Set<ArticleUser> users = article.getUsers();
+        articleDto.getUsers().forEach(user -> users.add(new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request")))));
+        articleDto.getUsers().forEach(user -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request"))))));
+        article.setUsers(users);
+
+        Set<Tag> tags = article.getTags();
+        articleDto.getTags().forEach(tag -> tags.add(tagRepo.findById(tag).orElseThrow(() -> new EntityNotFoundException("bad request"))));
+        article.setTags(tags);
+        article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
+
+        if (articleDto.getNamespaceId() != null)
+            article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")));
+
+        articleRepo.save(article);
+        return articleDto;
     }
-    if (articleDto.getTopic() != null) {
-        article.setTopic(articleDto.getTopic());
-    }
-    Set<ArticleUser> users = article.getUsers();
-    articleDto.getUsers().forEach(user -> users.add(new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request")))));
-    articleDto.getUsers().forEach(user -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request"))))));
-    article.setUsers(users);
-    Set<Tag> tags = article.getTags();
-    articleDto.getTags().forEach(tag -> tags.add(tagRepo.findById(tag).orElseThrow(() -> new EntityNotFoundException("bad request"))));
-    article.setTags(tags);
-    article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
-    if (articleDto.getNamespaceId() != null)
-        article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")));
-    articleRepo.save(article);
-    return articleDto;
-}
 }

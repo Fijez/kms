@@ -64,7 +64,7 @@ public class ArticleRestController {
 
         if (optionalArticle.isPresent()) {
             article = optionalArticle.get();
-            accessChecker.checkArticleAccess(article, authentication);
+//            accessChecker.checkArticleAccess(article, authentication);
             articleDto = articleMapper.modelToDto(article);
         } else {
             throw new RuntimeException("Article not found");

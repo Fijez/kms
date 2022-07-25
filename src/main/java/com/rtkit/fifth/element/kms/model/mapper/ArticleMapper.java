@@ -11,5 +11,8 @@ import java.util.List;
 public interface ArticleMapper extends EntityMapper<ArticleDto, Article> {
 
     @Mapping(source = "article.creator.name", target = "creator")
+    ArticleDto modelToDto(Article article);
+
+    @Mapping(source = "article.creator.name", target = "creator")
     List<ArticleDto> modelToDto(List<Article> articles);
 }
