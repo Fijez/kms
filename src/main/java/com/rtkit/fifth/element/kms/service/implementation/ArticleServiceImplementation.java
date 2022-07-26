@@ -3,6 +3,7 @@ package com.rtkit.fifth.element.kms.service.implementation;
 import com.rtkit.fifth.element.kms.model.dto.ArticleAddDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
+import com.rtkit.fifth.element.kms.model.dto.UserRoleDto;
 import com.rtkit.fifth.element.kms.model.entity.*;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.repository.*;
@@ -37,11 +38,13 @@ public class ArticleServiceImplementation implements ArticleService {
     private final TagRepo tagRepo;
     private final NamespaceRepo namespaceRepo;
 
+    private final VersionRepo versionRepo;
+
     @Autowired
     public ArticleServiceImplementation(ArticleRepo articleRepo
             , ArticleMapper articleMapper
             , GroupService groupService
-            , UserRepo userRepo, ArticleUserRepo articleUserRepo, TagRepo tagRepo, NamespaceRepo namespaceRepo) {
+            , UserRepo userRepo, ArticleUserRepo articleUserRepo, TagRepo tagRepo, NamespaceRepo namespaceRepo, VersionRepo versionRepo) {
         this.articleRepo = articleRepo;
         this.articleMapper = articleMapper;
         this.groupService = groupService;
@@ -49,6 +52,7 @@ public class ArticleServiceImplementation implements ArticleService {
         this.articleUserRepo = articleUserRepo;
         this.tagRepo = tagRepo;
         this.namespaceRepo = namespaceRepo;
+        this.versionRepo = versionRepo;
     }
 
     //TODO: реализовать добавление полей которые сейчас null, или убрать их
@@ -61,13 +65,21 @@ public class ArticleServiceImplementation implements ArticleService {
                 .users(null)
                 .namespace(null)//TODO: сделать дефолтный
                 .tags(null)
-                .content(articleAddDto.getContent())
-                .title(articleAddDto.getTitle())
                 .topic(articleAddDto.getTopic())
-                .versionDate(LocalDateTime.now(ZoneId.systemDefault()))
-                .creator(userRepo.findByEmail(articleAddDto.getCreator()))
                 .roleAccess(Role.USER)
                 .build();
+
+        article = articleRepo.save(article);
+
+        Version version = Version.builder()
+                .id(new VersionsId(article.getId(), LocalDateTime.now(ZoneId.systemDefault())))
+                .content(articleAddDto.getContent())
+                .article(article)
+                .title(articleAddDto.getTitle())
+                .creator(userRepo.findByEmail(articleAddDto.getCreator()))
+                .build();
+
+        article.addVersion(version);
         articleRepo.save(article);
         return articleMapper.modelToDto(article);
     }
@@ -86,7 +98,6 @@ public class ArticleServiceImplementation implements ArticleService {
         }
 
         Optional<User> user = Optional.of(userRepo.findByEmail(creator.get()));
-
         User inquirer = userRepo.findByEmail(authentication.getName());
         Set<Namespace> namespaces = inquirer.getNamespaces();
         Set<List<ArticleGroup>> articleGroups = new HashSet<>();
@@ -130,36 +141,48 @@ public class ArticleServiceImplementation implements ArticleService {
 //
 //        return new SliceImpl<>(new ArrayList<>(accessibleArticles), articles.getPageable(), articles.hasNext());
 //    }
+
+
     @Override
-    @Transactional
     public ArticleUpdateDto update(ArticleUpdateDto articleDto) {
-        var article = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-        article.setTitle(articleDto.getTitle());
-        article.setCreator(userRepo.findByEmail(articleDto.getCreator()));
 
-        if (articleDto.getContent() != null) {
-            article.setContent(articleDto.getContent());
-            article.setVersionDate(LocalDateTime.now(ZoneId.systemDefault()));
+        Article oldArticle = articleRepo.findById(articleDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        //TODO:проверить
+        List<Tag> tags = tagRepo.findAllById(articleDto);
+        if (!tags.isEmpty()) {
+            oldArticle.addTags(tags);
         }
 
-        if (articleDto.getTopic() != null) {
-            article.setTopic(articleDto.getTopic());
+        Set<ArticleUser> users = oldArticle.getUsers();
+        List<UserRoleDto> newUsers = articleDto.getUsers();
+        newUsers.removeIf(o -> users.stream().anyMatch(u -> u.getUser().getId().equals(o.getUserId())));
+        users.addAll(articleDto.getUsers().stream().map(u ->
+                new ArticleUser(userRepo.findById(u.getUserId()).orElseThrow(),
+                        articleRepo.findById(articleDto.getId()).orElseThrow(),
+                        Optional.of(u.getRole()).orElse(Role.USER))).collect(Collectors.toSet()));
+
+        Article newArticle = Article.builder()
+                .id(articleDto.getId())
+                .topic(Optional.of(articleDto.getTopic()).orElse(oldArticle.getTopic()))
+                .users(users)
+                .tags(oldArticle.getTags())
+                .roleAccess(Optional.of(Role.valueOf(articleDto.getRoleAccess())).orElse(Role.USER))
+                .namespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("namespace not exists")))
+                .versions(oldArticle.getVersions())
+                .build();
+
+        Version newVersion = Version.builder()
+                .id(new VersionsId(articleDto.getId(), oldArticle.getVersions().last().getId().getVersion()))
+                .article(newArticle)
+                .content(Optional.of(articleDto.getContent()).orElse(oldArticle.getVersions().last().getContent()))
+                .creator(userRepo.findById(articleDto.getCreatorId()).orElseThrow())
+                .title(articleDto.getTitle())
+                .build();
+        if (!versionRepo.findById(oldArticle.getVersions().last().getId()).get().equals(newVersion)) {
+            newVersion.setId(new VersionsId(articleDto.getId(), LocalDateTime.now(ZoneId.systemDefault())));
+            newArticle.addVersion(newVersion);
         }
-
-        Set<ArticleUser> users = article.getUsers();
-        articleDto.getUsers().forEach(user -> users.add(new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request")))));
-        articleDto.getUsers().forEach(user -> articleUserRepo.save((new ArticleUser(new ArticleUserId(article.getId(), user), Role.USER, article, userRepo.findById(user).orElseThrow(() -> new EntityNotFoundException("bad request"))))));
-        article.setUsers(users);
-
-        Set<Tag> tags = article.getTags();
-        articleDto.getTags().forEach(tag -> tags.add(tagRepo.findById(tag).orElseThrow(() -> new EntityNotFoundException("bad request"))));
-        article.setTags(tags);
-        article.setRoleAccess(Role.valueOf(articleDto.getRoleAccess()));
-
-        if (articleDto.getNamespaceId() != null)
-            article.setNamespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("bad request")));
-
-        articleRepo.save(article);
+        articleRepo.save(newArticle);
         return articleDto;
     }
 }

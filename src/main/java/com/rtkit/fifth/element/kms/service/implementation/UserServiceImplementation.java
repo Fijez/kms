@@ -68,12 +68,12 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     public Collection<String> provideAuthorities(User user) {
         Set<String> authorities = new HashSet<>();
         authorities.add(user.getRole().getName());
-
-//      user.getGroups().forEach(group -> group.getArticles().forEach(articleGroup -> authorities.add(articleGroup.getGroupRole().getAuthority().toUpperCase() + "_" + articleGroup.getArticle().getTitle().toUpperCase())));
         user.getGroups().forEach(group -> authorities.add(group.getTitle().toUpperCase()));
-//      user.getNamespaces().forEach(namespace -> namespace.getArticles().forEach(article -> authorities.add(namespace.getTitle().toUpperCase() + "_" + article.getTitle().toUpperCase())));
         user.getNamespaces().forEach(namespace -> authorities.add(namespace.getTitle().toUpperCase()));
-        user.getArticles().forEach(articleUser -> authorities.add(articleUser.getUserRole().getAuthority().toUpperCase() + "_" + articleUser.getArticle().getTitle().toUpperCase()));
+        user.getArticles().forEach(articleUser -> authorities.add(
+                articleUser.getUserRole().getAuthority().toUpperCase() + "_" +
+                        articleUser.getArticle().getVersions().last().getTitle().toUpperCase()
+        ));
 
         return authorities;
     }

@@ -47,7 +47,6 @@ public class GroupServiceImplementation implements GroupService {
         return groupDto;
     }
 
-
     @Override
     @Transactional
     public GroupUpdateDto groupUpdate(GroupUpdateDto groupDto) {

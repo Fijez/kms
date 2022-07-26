@@ -20,14 +20,14 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_generator")
     @Min(0)
     private Long id;
 
     @OneToMany(mappedBy = "creator",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE})
-    private Set<Article> createdArticles;
+    private Set<Version> createdArticles;
 
     @OneToMany(mappedBy = "creator",
             fetch = FetchType.LAZY,
