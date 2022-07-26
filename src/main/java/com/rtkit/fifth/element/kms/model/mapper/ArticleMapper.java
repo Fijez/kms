@@ -2,12 +2,11 @@ package com.rtkit.fifth.element.kms.model.mapper;
 
 import com.rtkit.fifth.element.kms.model.dto.ArticleDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
-import org.mapstruct.Mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+//@Mapper(componentModel = "spring")
 public interface ArticleMapper extends EntityMapper<ArticleDto, Article> {
 
     //    @Mapping(source = "article.creator.name", target = "creator")

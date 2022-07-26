@@ -3,11 +3,10 @@ package com.rtkit.fifth.element.kms.model.mapper;
 import com.rtkit.fifth.element.kms.model.dto.GroupDto;
 import com.rtkit.fifth.element.kms.model.entity.Group;
 import com.rtkit.fifth.element.kms.model.entity.User;
-import org.mapstruct.Mapper;
 
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+//@Mapper(componentModel = "spring")
 public interface GroupMapper extends EntityMapper<GroupDto, Group> {
 
     default GroupDto modelToDto(Group group) {

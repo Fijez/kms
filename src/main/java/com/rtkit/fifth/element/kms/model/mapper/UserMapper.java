@@ -5,15 +5,11 @@ import com.rtkit.fifth.element.kms.model.dto.GroupDto;
 import com.rtkit.fifth.element.kms.model.dto.NamespaceDto;
 import com.rtkit.fifth.element.kms.model.dto.UserDto;
 import com.rtkit.fifth.element.kms.model.entity.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+//@Mapper(componentModel = "spring")
 public interface UserMapper extends EntityMapper<UserDto, User> {
-
-    ArticleMapper articleMapper = Mappers.getMapper(ArticleMapper.class);
 
     default UserDto modelToDto(User user) {
         return UserDto.builder()

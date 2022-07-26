@@ -16,19 +16,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UserServiceImplementation implements UserService, UserDetailsService {
 
     private final UserRepo userRepo;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
-    @PersistenceContext
-    private EntityManager em;
 
     @Autowired
     public UserServiceImplementation(UserRepo userRepo, UserMapper userMapper,
