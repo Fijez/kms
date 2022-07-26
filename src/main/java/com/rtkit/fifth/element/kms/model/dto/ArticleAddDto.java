@@ -4,7 +4,7 @@ import com.rtkit.fifth.element.kms.model.entity.Article;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,13 +23,16 @@ public class ArticleAddDto {
     private String topic;
 
     @Schema(description = "Версия статьи")
-    private LocalDate versionDate;
+    private LocalDateTime versionDate;
 
     @Schema(description = "Текст статьи")
     private String content;
 
+    private Long namespace;
+
     public ArticleAddDto(Article article) {
         this.title = article.getVersions().last().getTitle();
+        this.namespace = article.getNamespace().getId();
         this.topic = article.getTopic();
         this.content = article.getVersions().last().getContent();
         this.creator = article.getVersions().last().getCreator().getEmail();

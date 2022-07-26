@@ -22,6 +22,8 @@ public class TagController {
         this.tagService = tagService;
     }
 
+    //TODO: добавить возможность добавлять теги только администраторам
+    // статей или глобальным администраторам
     @PostMapping
     @Operation(summary = "Создание новых тегов")
     public String addNewTag(@RequestBody TagDto tagDto) {

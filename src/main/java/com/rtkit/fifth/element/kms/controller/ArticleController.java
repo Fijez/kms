@@ -6,7 +6,9 @@ import com.rtkit.fifth.element.kms.model.dto.ArticleUpdateDto;
 import com.rtkit.fifth.element.kms.model.entity.Article;
 import com.rtkit.fifth.element.kms.model.mapper.ArticleMapper;
 import com.rtkit.fifth.element.kms.service.interfaces.AccessChecker;
+import com.rtkit.fifth.element.kms.model.entity.Namespace;
 import com.rtkit.fifth.element.kms.service.interfaces.ArticleService;
+import com.rtkit.fifth.element.kms.service.interfaces.NamespaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -22,22 +24,26 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/article")
 @Tag(name = "Article controller", description = "Создание, редактирование и поиск статей")
-public class ArticleRestController {
+public class ArticleController {
 
     private final ArticleService articleService;
     private final ArticleMapper articleMapper;
     private final AccessChecker accessChecker;
 
+    private final NamespaceService namespaceService;
+
     @Autowired
-    public ArticleRestController(ArticleService articleService, ArticleMapper articleMapper, AccessChecker accessChecker) {
+    public ArticleController(ArticleService articleService, AccessChecker accessChecker, ArticleMapper articleMapper, NamespaceService namespaceService) {
         this.articleService = articleService;
         this.articleMapper = articleMapper;
         this.accessChecker = accessChecker;
+        this.namespaceService = namespaceService;
     }
 
     @GetMapping
@@ -54,6 +60,7 @@ public class ArticleRestController {
                                                     @RequestParam Optional<String[]> tags,
                                                     @PageableDefault(size = 5) Pageable pageable,
                                                     Authentication authentication) {
+//TODO:убедиться, что выводятся только доступные пользователю статьи
         return ResponseEntity.ok(articleService.searchArticles(creator, title, topic, content, tags, pageable, authentication));
     }
 
@@ -81,12 +88,14 @@ public class ArticleRestController {
         return mav;
     }
 
+    //TODO: добавить проверку доступа пользователя к пространству, в которое сохраняется статья
     @PostMapping
     @Operation(summary = "Добавление новой статьи")
     public ArticleDto addNewArticle(@RequestBody ArticleAddDto articleAddDto) {
         return articleService.addNewArticle(articleAddDto);
     }
 
+    //TODO: проверка на доступ пользователя к статье
     @PutMapping
     @Operation(summary = "Редактирование существующей статьи")
     public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {

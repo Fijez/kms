@@ -14,8 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "article")
-public class
-Article {
+public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_id_generator")
