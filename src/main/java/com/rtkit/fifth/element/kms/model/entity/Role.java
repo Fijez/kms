@@ -12,7 +12,7 @@ public enum Role implements GrantedAuthority {
 
     USER("USER", 1),
     MODERATOR("MODERATOR", 2),
-    ADMIN("ADMIN", 3);
+    ADMIN("ADMIN", 3),
     ZERO_ADMIN("zero_admin", 4);
 
     private String name;

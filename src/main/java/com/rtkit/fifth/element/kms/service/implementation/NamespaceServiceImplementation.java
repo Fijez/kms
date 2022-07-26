@@ -49,6 +49,12 @@ public class NamespaceServiceImplementation implements NamespaceService {
 
     @Override
     @Transactional
+    public Namespace addNewNamespace(Namespace namespace) {
+        return namespaceRepo.save(namespace);
+    }
+
+    @Override
+    @Transactional
     public NamespaceUpdateDto update(NamespaceUpdateDto namespaceDto) {
         Namespace namespace = namespaceRepo.findById(namespaceDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
         namespace.setTitle(namespaceDto.getTitle());
