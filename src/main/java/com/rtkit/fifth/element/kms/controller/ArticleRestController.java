@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/article")
-@Tag(name="Article controller", description="Создание, редактирование и поиск статей")
+@Tag(name = "Article controller", description = "Создание, редактирование и поиск статей")
 public class ArticleRestController {
 
     private final ArticleService articleService;

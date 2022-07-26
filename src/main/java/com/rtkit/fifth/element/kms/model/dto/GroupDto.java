@@ -13,12 +13,16 @@ import java.util.List;
 public class GroupDto {
 
     private Long id;
-    @Schema(description = "Название группы")
+
+    @Schema(description = "РќР°Р·РІР°РЅРёРµ РіСЂСѓРїРїС‹")
     private String title;
-    @Schema(description = "Описание группы")
+
+    @Schema(description = "РћРїРёСЃР°РЅРёРµ РіСЂСѓРїРїС‹")
     private String description;
-    @Schema(description = "Id новых статей, доступных группе")
+
+    @Schema(description = "Id РЅРѕРІС‹С… СЃС‚Р°С‚РµР№, РґРѕСЃС‚СѓРїРЅС‹С… РіСЂСѓРїРїРµ")
     private List<Long> article;
-    @Schema(description = "Id новых пользователей в группе")
+
+    @Schema(description = "Id РЅРѕРІС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РІ РіСЂСѓРїРїРµ")
     private List<Long> users;
 }

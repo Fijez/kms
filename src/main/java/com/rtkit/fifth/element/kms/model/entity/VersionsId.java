@@ -17,8 +17,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Embeddable
 public class VersionsId implements Serializable {
+
     @Column(name = "article_id")
     private Long articleId;
+
     @Column(name = "date_time")
     @DateTimeFormat
     private LocalDateTime version;

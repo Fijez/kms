@@ -13,8 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRoleDto {
-    @Schema(description = "Id пользователя")
+
+    @Schema(description = "Id РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ")
     private Long userId;
-    @Schema(description = "Новая роль пользователя")
+
+    @Schema(description = "РќРѕРІР°СЏ СЂРѕР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ")
     private Role role;
 }

@@ -8,7 +8,8 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface NamespaceMapper extends EntityMapper<NamespaceDto, Namespace>{
+public interface NamespaceMapper extends EntityMapper<NamespaceDto, Namespace> {
+
     @Mapping(source = "namespace.creator.name", target = "creator")
     List<NamespaceDto> modelToDto(List<Namespace> namespace);
 }

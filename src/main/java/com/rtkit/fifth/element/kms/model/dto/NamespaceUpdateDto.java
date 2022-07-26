@@ -15,11 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 @Schema(description = "Сущность, для обновления  namespace")
 public class NamespaceUpdateDto {
+
     private Long id;
+
     @Schema(description = "Новое имя для namespace")
     private String title;
-    @ArraySchema(arraySchema = @Schema (description = "Id новых пользователей namespace"))
+
+    @ArraySchema(arraySchema = @Schema(description = "Id новых пользователей namespace"))
     private List<Long> users;
-    @ArraySchema(arraySchema = @Schema (description = "Id новых статей для namespace"))
+
+    @ArraySchema(arraySchema = @Schema(description = "Id новых статей для namespace"))
     private List<Long> articles;
 }

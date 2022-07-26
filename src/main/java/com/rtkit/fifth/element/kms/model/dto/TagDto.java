@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TagDto {
+
     private Long id;
-    @Schema(description = "“Â„")
+
+    @Schema(description = "–¢–µ–≥")
     private String title;
 }

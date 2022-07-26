@@ -13,8 +13,10 @@ import java.io.Serializable;
 @Embeddable
 @EqualsAndHashCode
 public class ArticleUserId implements Serializable {
+
     @Column(name = "article_id")
     private Long articleId;
+
     @Column(name = "user_id")
     private Long userId;
 }

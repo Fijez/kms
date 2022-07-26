@@ -24,15 +24,15 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class UserServiceImplementation implements UserService, UserDetailsService {
 
-    @PersistenceContext
-    private EntityManager em;
     private final UserRepo userRepo;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     public UserServiceImplementation(UserRepo userRepo, UserMapper userMapper,
-            BCryptPasswordEncoder passwordEncoder) {
+                                     BCryptPasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;

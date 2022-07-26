@@ -13,13 +13,18 @@ import java.util.List;
 @NoArgsConstructor
 @Schema(description = "Сущность, для обновление группы")
 public class GroupUpdateDto {
+
     private Long id;
+
     @Schema(description = "Новое название группы")
     private String title;
+
     @Schema(description = "Новое описание группы")
     private String description;
-    @ArraySchema(arraySchema = @Schema (description = "Id новых статей, доступных группе"))
+
+    @ArraySchema(arraySchema = @Schema(description = "Id новых статей, доступных группе"))
     private List<Long> article;
-    @ArraySchema(arraySchema = @Schema (description = "Id новых пользователей для группы"))
+
+    @ArraySchema(arraySchema = @Schema(description = "Id новых пользователей для группы"))
     private List<Long> users;
 }

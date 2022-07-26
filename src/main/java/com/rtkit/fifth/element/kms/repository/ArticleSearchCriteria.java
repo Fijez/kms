@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ArticleSearchCriteria {
+
     private String key;
     private Object value;
     private ArticleSearchOperation operation;

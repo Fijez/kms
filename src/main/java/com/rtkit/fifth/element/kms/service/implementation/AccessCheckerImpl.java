@@ -37,7 +37,7 @@ public class AccessCheckerImpl implements AccessChecker {
         });
 
         article.getUsers().forEach(articleUser -> {
-            if (authorities.contains(articleUser.getUserRole().getAuthority().toUpperCase() + "_" + articleUser.getArticle().getTitle().toUpperCase())) {
+            if (authorities.contains(articleUser.getUserRole().getAuthority().toUpperCase() + "_" + articleUser.getArticle().getVersions().last().getTitle().toUpperCase())) {
                 accessibleByUsers.set(true);
             }
         });

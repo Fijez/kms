@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Tag(name="Group controller", description="Создание и редактирование групп")
+@Tag(name = "Group controller", description = "Создание и редактирование групп")
 @RequestMapping("/group")
 public class GroupController {
     private final GroupService groupService;

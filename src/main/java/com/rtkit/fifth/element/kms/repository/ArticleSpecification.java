@@ -18,6 +18,7 @@ public class ArticleSpecification implements Specification<Article> {
     public void add(ArticleSearchCriteria criteria) {
         list.add(criteria);
     }
+
     public void add(List<ArticleSearchCriteria> criteria) {
         list.addAll(criteria);
     }

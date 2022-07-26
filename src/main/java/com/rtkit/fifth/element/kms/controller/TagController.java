@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name="Tag controller", description="Создание тегов")
+@Tag(name = "Tag controller", description = "Создание тегов")
 @RequestMapping("/tag")
 public class TagController {
 

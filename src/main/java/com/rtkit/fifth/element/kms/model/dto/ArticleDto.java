@@ -1,13 +1,10 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
-import com.rtkit.fifth.element.kms.model.entity.*;
+import com.rtkit.fifth.element.kms.model.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -18,17 +15,23 @@ import java.util.Set;
 public class ArticleDto {
 
     private Long id;
-    @Schema(description = "Название статьи")
+
+    @Schema(description = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")
     private String title;
-    @Schema(description = "Автор(модератор) статьи")
+
+    @Schema(description = "пїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅпїЅпїЅпїЅ")
     private String creator;
-    @Schema(description = "Тема статьи")
+
+    @Schema(description = "пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")
     private String topic;
-    @Schema(description = "Версия статьи")
+
+    @Schema(description = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")
     private LocalDate versionDate;
-    @Schema(description = "Текст статьи")
+
+    @Schema(description = "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")
     private String content;
-    @Schema(description = "Доступ к статье")
+
+    @Schema(description = "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ")
     private Role roleAccess;
 
 //    private Set<Tag> tags;

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Tag(name="Namespace controller", description="Создание и редактирование namespace")
+@Tag(name = "Namespace controller", description = "Создание и редактирование namespace")
 @RequestMapping("/namespace")
 public class NamespaceController {
 
