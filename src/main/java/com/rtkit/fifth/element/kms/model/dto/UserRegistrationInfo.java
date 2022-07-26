@@ -1,5 +1,6 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
+import com.rtkit.fifth.element.kms.model.entity.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,4 +32,6 @@ public class UserRegistrationInfo {
     @Size(min = 5, max = 20,
             message = "Не меньше 5 знаков и не более 20 знаков")
     private String passwordConfirm;
+
+    private Role role;
 }

@@ -26,7 +26,11 @@ public class GroupServiceImplementation implements GroupService {
     private final ArticleGroupRepo articleGroupRepo;
 
     @Autowired
-    public GroupServiceImplementation(GroupRepo groupRepo, UserRepo userRepo, ArticleRepo articleRepo, GroupMapper groupMapper, ArticleGroupRepo articleGroupRepo) {
+    public GroupServiceImplementation(GroupRepo groupRepo,
+                                      UserRepo userRepo,
+                                      ArticleRepo articleRepo,
+                                      GroupMapper groupMapper,
+                                      ArticleGroupRepo articleGroupRepo) {
         this.groupRepo = groupRepo;
         this.userRepo = userRepo;
         this.articleRepo = articleRepo;
@@ -53,6 +57,7 @@ public class GroupServiceImplementation implements GroupService {
         var group = groupRepo.findById(groupDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
         group.setTitle(groupDto.getTitle());
         group.setDescription(groupDto.getDescription());
+        //TODO: проверить на уже существующие в бд статьи
         Set<ArticleGroup> articles = group.getArticles();
         groupDto.getArticle().forEach(art -> articles.add(new ArticleGroup(new ArticleGroupId(art, group.getId()), Role.USER, articleRepo.findById(art).orElseThrow(() -> new EntityNotFoundException("bad request")), group)));
         groupDto.getArticle().forEach(art -> articleGroupRepo.save(new ArticleGroup(new ArticleGroupId(art, group.getId()), Role.USER, articleRepo.findById(art).orElseThrow(() -> new EntityNotFoundException("bad request")), group)));

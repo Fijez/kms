@@ -9,6 +9,8 @@ public interface NamespaceService {
 
     Namespace addNewNamespace(Namespace namespaceDto);
 
+    Namespace findByTitle(String title);
+
     NamespaceUpdateDto update(NamespaceUpdateDto namespaceDto);
 }
 

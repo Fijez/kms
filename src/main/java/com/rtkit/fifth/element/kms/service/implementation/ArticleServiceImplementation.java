@@ -40,6 +40,8 @@ public class ArticleServiceImplementation implements ArticleService {
 
     private final VersionRepo versionRepo;
 
+    private final String DEFAULT_NAMESPACE = "open_namespace";
+
     @Autowired
     public ArticleServiceImplementation(ArticleRepo articleRepo
             , ArticleMapper articleMapper
@@ -55,16 +57,11 @@ public class ArticleServiceImplementation implements ArticleService {
         this.versionRepo = versionRepo;
     }
 
-    //TODO: реализовать добавление полей которые сейчас null, или убрать их
-    // путем создания ArticleAddDto, или другим способом
     @Override
     @Transactional
     public ArticleDto addNewArticle(ArticleAddDto articleAddDto) {
         Article article = Article.builder()
-                .groups(null)
-                .users(null)
-                .namespace(null)//TODO: сделать дефолтный
-                .tags(null)
+                .namespace(namespaceRepo.findByTitle(DEFAULT_NAMESPACE))
                 .topic(articleAddDto.getTopic())
                 .roleAccess(Role.USER)
                 .build();
@@ -156,7 +153,7 @@ public class ArticleServiceImplementation implements ArticleService {
         Set<ArticleUser> users = oldArticle.getUsers();
         List<UserRoleDto> newUsers = articleDto.getUsers();
         newUsers.removeIf(o -> users.stream().anyMatch(u -> u.getUser().getId().equals(o.getUserId())));
-        users.addAll(articleDto.getUsers().stream().map(u ->
+        users.addAll(newUsers.stream().map(u ->
                 new ArticleUser(userRepo.findById(u.getUserId()).orElseThrow(),
                         articleRepo.findById(articleDto.getId()).orElseThrow(),
                         Optional.of(u.getRole()).orElse(Role.USER))).collect(Collectors.toSet()));
@@ -167,7 +164,8 @@ public class ArticleServiceImplementation implements ArticleService {
                 .users(users)
                 .tags(oldArticle.getTags())
                 .roleAccess(Optional.of(Role.valueOf(articleDto.getRoleAccess())).orElse(Role.USER))
-                .namespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() -> new EntityNotFoundException("namespace not exists")))
+                .namespace(namespaceRepo.findById(articleDto.getNamespaceId()).orElseThrow(() ->
+                        new EntityNotFoundException("namespace not exists")))
                 .versions(oldArticle.getVersions())
                 .build();
 

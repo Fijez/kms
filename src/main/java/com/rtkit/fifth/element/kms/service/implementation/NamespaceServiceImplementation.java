@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -27,7 +28,10 @@ public class NamespaceServiceImplementation implements NamespaceService {
     private final ArticleRepo articleRepo;
 
     @Autowired
-    public NamespaceServiceImplementation(NamespaceRepo namespaceRepo, UserRepo userRepo, NamespaceMapper namespaceMapper, ArticleRepo articleRepo) {
+    public NamespaceServiceImplementation(NamespaceRepo namespaceRepo,
+                                          UserRepo userRepo,
+                                          NamespaceMapper namespaceMapper,
+                                          ArticleRepo articleRepo) {
         this.namespaceRepo = namespaceRepo;
         this.userRepo = userRepo;
         this.namespaceMapper = namespaceMapper;
@@ -54,14 +58,21 @@ public class NamespaceServiceImplementation implements NamespaceService {
     }
 
     @Override
+    public Namespace findByTitle(String title) {
+        return namespaceRepo.findByTitle(title);
+    }
+
+    @Override
     @Transactional
     public NamespaceUpdateDto update(NamespaceUpdateDto namespaceDto) {
         Namespace namespace = namespaceRepo.findById(namespaceDto.getId()).orElseThrow(() -> new EntityNotFoundException("entity not found"));
-        namespace.setTitle(namespaceDto.getTitle());
+        namespace.setTitle(Optional.of(namespaceDto.getTitle()).orElse(namespace.getTitle()));
         Set<Article> articles = namespace.getArticles();
+        //TODO: проверить на уже существующие в бд статьи
         namespaceDto.getArticles().forEach(x -> articles.add(articleRepo.findById(x).orElseThrow(() -> new EntityNotFoundException("bad request"))));
         namespace.setArticles(articles);
         Set<User> users = namespace.getUsers();
+        //TODO: проверить на уже существующих в бд пользователей
         namespaceDto.getUsers().forEach(x -> users.add(userRepo.findById(x).orElseThrow(() -> new EntityNotFoundException("bad request"))));
         namespace.setUsers(users);
         namespaceRepo.save(namespace);

@@ -7,6 +7,7 @@ import com.rtkit.fifth.element.kms.model.entity.User;
 import com.rtkit.fifth.element.kms.model.mapper.UserMapper;
 import com.rtkit.fifth.element.kms.repository.UserRepo;
 import com.rtkit.fifth.element.kms.service.MyUserDetails;
+import com.rtkit.fifth.element.kms.service.interfaces.NamespaceService;
 import com.rtkit.fifth.element.kms.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,12 +27,17 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    private final NamespaceService namespaceService;
+
+    private final String DEFAULT_NAMESPACE = "default namespace";
+
     @Autowired
     public UserServiceImplementation(UserRepo userRepo, UserMapper userMapper,
-                                     BCryptPasswordEncoder passwordEncoder) {
+                                     BCryptPasswordEncoder passwordEncoder, NamespaceService namespaceService) {
         this.userRepo = userRepo;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.namespaceService = namespaceService;
     }
 
     @Override
@@ -104,9 +110,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
                         .email(registrationInfo.getEmail())
                         .name(registrationInfo.getName())
                         .password(passwordEncoder.encode(registrationInfo.getPassword()))
-                        .role(Role.USER)
+                        .role(Optional.of(registrationInfo.getRole()).orElse(Role.USER))
+                        .namespaces(Set.of(namespaceService.findByTitle(DEFAULT_NAMESPACE)))
                         .build());
-
         return true;
     }
 
@@ -118,12 +124,14 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         if (userFromDB != null) {
             return false;
         }
+
         userRepo.save(
                 User.builder()
                         .email(user.getEmail())
                         .name(user.getName())
                         .password(passwordEncoder.encode(user.getPassword()))
                         .role(user.getRole())
+                        .namespaces(Set.of(namespaceService.findByTitle(DEFAULT_NAMESPACE)))
                         .build());
 
         return true;

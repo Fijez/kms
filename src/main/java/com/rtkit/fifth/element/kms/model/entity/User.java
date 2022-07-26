@@ -47,7 +47,7 @@ public class User {
     @ManyToMany(mappedBy = "articles",
             fetch = FetchType.LAZY,
             cascade = {CascadeType.REFRESH})
-    private Set<Namespace> Namespaces;
+    private Set<Namespace> namespaces;
 
     @NotBlank
     @Email
