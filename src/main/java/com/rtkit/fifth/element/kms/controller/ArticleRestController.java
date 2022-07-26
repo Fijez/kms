@@ -82,13 +82,13 @@ public class ArticleRestController {
     }
 
     @PostMapping
-    @Operation(summary = "Добавление новой статьями")
+    @Operation(summary = "Добавление новой статьи")
     public ArticleDto addNewArticle(@RequestBody ArticleAddDto articleAddDto) {
         return articleService.addNewArticle(articleAddDto);
     }
 
     @PutMapping
-    @Operation(summary = "Редактирование существующей статьями")
+    @Operation(summary = "Редактирование существующей статьи")
     public ArticleUpdateDto update(@RequestBody ArticleUpdateDto articleUpdateDto) {
         ArticleUpdateDto update = null;
         update = articleService.update(articleUpdateDto);
