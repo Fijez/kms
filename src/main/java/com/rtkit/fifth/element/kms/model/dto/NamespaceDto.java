@@ -19,5 +19,5 @@ public class NamespaceDto {
     private String title;
 
     @Schema(description = "Создатель namespace, он же 0 администратор")
-    private String creator;
+    private Long creator;
 }

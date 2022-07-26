@@ -1,15 +1,13 @@
 package com.rtkit.fifth.element.kms.model.dto;
 
 import com.rtkit.fifth.element.kms.model.entity.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {

@@ -38,7 +38,7 @@ public class NamespaceServiceImplementation implements NamespaceService {
     @Transactional
     public NamespaceDto addNewNamespace(NamespaceDto namespaceDto) {
         Namespace namespace = Namespace.builder()
-                .creator(userRepo.findByEmail(namespaceDto.getCreator()))
+                .creator(userRepo.findById(namespaceDto.getCreator()).orElseThrow())
                 .title(namespaceDto.getTitle())
                 .users(null)
                 .articles(null)
