@@ -42,8 +42,8 @@ public class ArticleSpec implements Specification<Article> {
         creator.ifPresent(cr -> predicates.add(builder.equal(root.get("creator"), cr)));
         title.filter(ti -> !ti.isBlank()).ifPresent(ti -> predicates.add(builder.like(root.get("title"), ti)));
         topic.filter(to -> !to.isBlank()).ifPresent(to -> predicates.add(builder.like(root.get("topic"), to)));
-        content.filter(co -> !co.isBlank()).ifPresent(
-                co -> predicates.add(builder.equal(builder.function("fts", Boolean.class, root.get("content"), builder.literal(co)), true)));
+        content.filter(co -> !co.isBlank()).ifPresent(co -> predicates.add(builder.equal(
+                builder.function("fts", Boolean.class, root.get("content"), builder.literal(co)), true)));
         tags.filter(ta -> (ta.length > 0)).ifPresent(ta -> {
             for (String tag : ta) {
                 tagPredicates.add(builder.in(root.get("tags")).value(tag));

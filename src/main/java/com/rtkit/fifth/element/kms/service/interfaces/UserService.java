@@ -20,6 +20,8 @@ public interface UserService extends UserDetailsService {
 
     boolean saveUser(UserRegistrationInfo user);
 
+    boolean saveUser(User user);
+
     boolean deleteUser(Long userId);
 
     String encodePassword(String password);
